@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.sublime-project
+*.sublime-workspace
+*.sqlite3
+*.vscode/
+*.coverage
+*.cache/
+*.po
+pytest.ini
+fabfile.py
+static/
+htmlcov/
+media/

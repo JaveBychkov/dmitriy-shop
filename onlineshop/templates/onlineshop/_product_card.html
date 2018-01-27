@@ -1,0 +1,21 @@
+{% load i18n %}
+<div class="product-item">
+    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}"></a>
+    <div class="product-list">
+    <h3>{{ product.title }}</h3>
+        {% if product.in_stock %}
+            {% if product.discount %}
+                <div class="price-wrap">
+                    <span class="price discount">₽ {{ product.price }}</span>
+                </div>
+                <span class="price">₽ {{ product.get_price }}</span>
+            {% else %}
+                <span class="price">₽ {{ product.get_price }}</span>
+            {% endif %}
+            <a href="" class="button">{% trans "Add to cart" %}</a>
+        {% else %}
+                <p>{% trans "not available" %}</p>
+                <a class="notifyme" href="">{% trans "Notify me when available!" %}</a>
+        {% endif %}
+    </div>
+</div>

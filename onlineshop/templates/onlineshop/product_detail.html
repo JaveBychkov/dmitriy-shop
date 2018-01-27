@@ -1,0 +1,40 @@
+{% extends "onlineshop/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "onlineshop/product-detail.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="product-detail">
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ object.image.url }}" alt="{{ object.title }}">
+            </div>
+            <div class="product-description">
+                <h1>{{ object.title }}</h1>
+                {% if product.discount %}
+                    <div class="price-wrap">
+                        <span class="price discount">₽ {{ product.price }}</span>
+                    </div>
+                    <span class="price">₽ {{ product.get_price }}</span>
+                {% else %}
+                    <span class="price">₽ {{ product.get_price }}</span>
+                {% endif %}
+                <p>{% trans "In stock:" %} {% if object.in_stock %} {% trans "Yes!" %} {% else %} {% trans "No :(" %} {% endif %}</p>
+                {% for attr in attributes %}
+                    <p>{{ attr.attribute }}: {{ attr.value }}</p>
+                {% endfor %}
+                {% if object.in_stock %}
+                    <a href="" class="button">{% trans "Add to cart" %}</a>
+                {% else %}
+                    <p>{% trans "Product is not available" %}</p>
+                    <a class="notifyme" href="">{% trans "Notify me when available!" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    <p>{{ object.desc }}</p>
+    </div>
+{% endblock content %}

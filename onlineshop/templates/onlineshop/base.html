@@ -1,0 +1,50 @@
+{% load static %}
+{% load i18n %}
+{% load onlineshop_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block styles %}
+    <link rel="stylesheet" href="{% static "onlineshop/main.css" %}">
+    {% endblock styles %}
+    <title>{% trans "3D Shop" %}</title>
+</head>
+    <body>
+        <div class="header">
+            <div class="nav">
+                <a href="#">{% trans "ABOUT US" %}</a>
+                <a href="#">{% trans "DELIVERY" %}</a>
+                <a href="#">{% trans "CONTACT" %}</a>
+                <a href="#">{% trans "LOGIN" %}</a>
+                <a href="#">{% trans "CART" %}</a>
+            </div>
+        </div>
+        <div class="main">
+        {% category_menu %}
+        {% block content %}
+        {% endblock content %}
+        </div>
+        {% block js_scripts %}
+        <script>
+            var expands = document.getElementsByClassName("expand");
+            var i;
+        
+            for ( i = 0; i < expands.length; i++ ) {
+                expands[i].addEventListener("click", function() {
+                    var accordion = this.parentElement.nextElementSibling;
+                    if ( accordion.classList.contains("active") ) {
+                        accordion.classList.remove("active")
+                        this.innerHTML = "+"
+                    } else {
+                        accordion.classList.add("active");
+                        this.innerHTML = "-"
+                    }
+                });
+            }
+        </script>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{% load mptt_tags %}
+<div class="menu">
+<ul>
+    {% recursetree nodes %}
+    <li>
+        <div class="menu-title">
+            <a href="{{ node.get_absolute_url }}">{{ node.title }}</a>
+        {% if not node.is_leaf_node %}
+            <p class="expand">+</p>
+        </div>
+            <div class="accordion">
+                <ul>
+                    {{ children }}
+                </ul>
+            </div>
+        {% else %}
+            </div>
+        {% endif %}
+    </li>
+    {% endrecursetree %}
+</ul>
+</div>

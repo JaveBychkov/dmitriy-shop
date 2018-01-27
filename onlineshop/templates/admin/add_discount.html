@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<p>{% trans "Write down dicount to apply" %}</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+
+    {{ form }}
+
+    <p>{% trans "The discount will be applied to:" %}</p>
+
+    <ul>{{ products|unordered_list }}</ul>
+
+    <input type="hidden" name="action" value="add_discount" />
+    <input type="submit" name="apply" value="Apply discount" />
+</form>
+
+{% endblock %}

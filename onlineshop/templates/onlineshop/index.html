@@ -1,0 +1,12 @@
+{% extends "onlineshop/base.html" %}
+
+{% block content %}
+<div class="products-list">
+    <div class="products">
+        {% for product in products %}
+        {% include "onlineshop/_product_card.html" %}
+        {% endfor %}
+    </div>
+    {% include "onlineshop/_pagination.html" with products=page_obj %}
+</div>
+{% endblock content %}

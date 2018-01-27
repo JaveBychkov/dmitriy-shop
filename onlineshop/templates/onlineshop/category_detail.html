@@ -1,0 +1,15 @@
+{% extends "onlineshop/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="products-list">
+    <div class="products">
+            {% for product in products %}
+                {% include "onlineshop/_product_card.html" %}
+            {% empty %}
+                <p>{% trans "No products for this category" %}</p>
+            {% endfor %}
+    </div>
+    {% include "onlineshop/_pagination.html" %}
+</div>
+{% endblock content %}
