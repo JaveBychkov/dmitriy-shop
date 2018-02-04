@@ -1,0 +1,18 @@
+{% load static %}
+{% comment "Tests file" %}
+This file exists in testing purposes and as default implementation of cart
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static "shoppingcart/cart_styles.css" %}">
+</head>
+<body>
+    {% include "shoppingcart/_cart_detail.html" %}
+    <script src="{% static "shoppingcart/shoppingcart.js" %}"></script>
+</body>
+</html>

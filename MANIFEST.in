@@ -1,0 +1,4 @@
+include README.MD
+recursive-include shoppingcart/static *
+recursive-include shoppingcart/templates *
+recursive-include shoppingcart/locale *
