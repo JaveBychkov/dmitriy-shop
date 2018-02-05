@@ -28,7 +28,7 @@
                     <p>{{ attr.attribute }}: {{ attr.value }}</p>
                 {% endfor %}
                 {% if object.in_stock %}
-                    <a href="" class="button">{% trans "Add to cart" %}</a>
+                    <a href="{% url "shoppingcart:add-product" %}" class="button" data-id_="{{ object.id }}" data-slug="{{ object.slug }}">{% trans "Add to cart" %}</a>
                 {% else %}
                     <p>{% trans "Product is not available" %}</p>
                     <a class="notifyme" href="">{% trans "Notify me when available!" %}</a>

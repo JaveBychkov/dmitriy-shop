@@ -10,5 +10,6 @@ __pycache__/
 pytest.ini
 fabfile.py
 static/
+!*/static/
 htmlcov/
 media/

@@ -89,14 +89,11 @@ class Product(models.Model):
         ordering = ('title',)
 
     def in_stock(self):
-        return self.stock > 0
+        return self.stock
 
     in_stock.boolean = True
     in_stock.admin_order_field = 'stock'
-
-    # Using fucntion property here because I want to use this as property
-    # in list_display of ModelAdmin
-    in_stock = property(in_stock)
+    in_stock.short_description = _('In stock')
 
     def get_absolute_url(self):
         return reverse('onlineshop:product-detail', kwargs={'slug': self.slug})

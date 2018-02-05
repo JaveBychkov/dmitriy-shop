@@ -23,11 +23,11 @@ class TestProductModel:
 
     def test_in_stock(self):
         p = product_factory(title='Something', stock=1, to_db=False)
-        assert p.in_stock is True
+        assert p.in_stock() == 1
 
     def test_not_in_stock(self):
         p = product_factory(title='Something', stock=0, to_db=False)
-        assert p.in_stock is False
+        assert p.in_stock() == 0
 
     def test_minimal_price(self):
         p = product_factory(price=Decimal(-10.00), to_db=False)

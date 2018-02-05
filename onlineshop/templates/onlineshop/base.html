@@ -15,11 +15,11 @@
     <body>
         <div class="header">
             <div class="nav">
-                <a href="#">{% trans "ABOUT US" %}</a>
+                <a href="/">{% trans "HOME" %}</a>
                 <a href="#">{% trans "DELIVERY" %}</a>
                 <a href="#">{% trans "CONTACT" %}</a>
                 <a href="#">{% trans "LOGIN" %}</a>
-                <a href="#">{% trans "CART" %}</a>
+                <a href="{% url "shoppingcart:cart-detail" %}">{% trans "CART" %}</a>
             </div>
         </div>
         <div class="main">
@@ -45,6 +45,9 @@
                 });
             }
         </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{% static "onlineshop/csrf_setup.js" %}"></script>
+        <script src="{% static "onlineshop/add_product.js" %}"></script>
         {% endblock %}
     </body>
 </html>

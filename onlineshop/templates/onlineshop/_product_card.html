@@ -12,7 +12,7 @@
             {% else %}
                 <span class="price">₽ {{ product.get_price }}</span>
             {% endif %}
-            <a href="" class="button">{% trans "Add to cart" %}</a>
+            <a href="{% url "shoppingcart:add-product" %}" class="button" data-id_="{{ product.id }}" data-slug="{{ product.slug }}">{% trans "Add to cart" %}</a>
         {% else %}
                 <p>{% trans "not available" %}</p>
                 <a class="notifyme" href="">{% trans "Notify me when available!" %}</a>
