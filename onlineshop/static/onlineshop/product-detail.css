@@ -1,0 +1,34 @@
+.product-detail {
+    width: 73%;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.product-image {
+    width: 300px;
+    background: white;
+    transition: .3s ease-in;
+    margin: 0px 10px 10px 0px;
+  }
+
+.product-image img {
+    display: block;
+    width: 100%;
+    transition: transform 0.4s ease-out;
+}
+
+.product-image:hover > img {
+    transform: scale(1.05);
+}
+
+.product-description {
+    flex-direction: column;
+}
+
+.product-detail h1, p {
+    color: #3F3F3F
+}
