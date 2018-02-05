@@ -40,13 +40,13 @@ class CartMixin:
     """
     Mixin that provides methods to get cart object for user.
 
-    If user is authenticated he either get his already existed cart or new cart
-    will be created and associated with user.
+    If user is authenticated he either get his already existing cart or new 
+    cart will be created and associated with user.
 
     If user is not authenticated get_session_cart will try to get cart id from
     user session and if this id exists will return user's cart, otherwise new
-    cart will be created and this cart id will be stored in user's session so 
-    he can access same cart on his next visit.
+    cart will be created and this cart id will be stored in user's session so
+    user will get the same cart on his next visit.
     """
 
     def get_cart(self):
@@ -130,7 +130,7 @@ class AddProductView(BaseEditCartView):
         """
         Returns Bad Request response.
 
-        Because our form .clean() method checks whether product presists in
+        Because our form .clean() method checks whether product is in
         cart - valid form means that product already in cart and should'nt
         be added once again.
         """
@@ -146,7 +146,7 @@ class AddProductView(BaseEditCartView):
 
         Envisages possibilities such as user knowingly sends wrong id and slug
         or product not in stock.
-        In both cases such requests results in Bad Request response. 
+        In both cases such requests results in Bad Request response.
         """
         id_, slug = form.cleaned_data['id_'], form.cleaned_data['slug']
         try:
@@ -217,9 +217,18 @@ class ChangeQuantityView(BaseEditCartView):
     def form_valid(self, form):
         """Changes product's quantity."""
         id_, slug = form.cleaned_data['id_'], form.cleaned_data['slug']
+        quantity = form.cleaned_data['quantity']
 
-        line = self.cart.line_set.filter(product__id=id_, product__slug=slug)
+        line = self.cart.line_set.filter(
+            product__id=id_, product__slug=slug
+        ).select_related('product')
+
         line = line.get()
+
+        if line.product.in_stock() < quantity:
+            return self.render_to_response(
+                message=_('Product not in stock'), status=400
+            )
 
         line.quantity = form.cleaned_data['quantity']
         line.save()
@@ -280,8 +289,7 @@ class CartDetailView(generic.DetailView):
 
     def get_object(self):
         """
-        Get cart object for user either associated with registered user or one
-        from session for unregistered users.
+        Get associated cart object for user.
         """
         if self.request.user.is_authenticated:
             try:

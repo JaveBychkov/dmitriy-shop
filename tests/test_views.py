@@ -18,7 +18,7 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture
 def product():
     return ProductModel.objects.create(
-        price=1000, discount=0, slug='some-some'
+        price=1000, discount=0, slug='some-some', stock=5
     )
 
 
@@ -388,6 +388,25 @@ class TestChangeQuantityView:
     def test_form_valid_changes_quantity(self, form, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
         Line.objects.create(cart=cart, product=product)
+        product.save()
+        form.cleaned_data = {
+            'id_': product.pk, 'slug': product.slug, 'quantity': 3}
+
+        view = ChangeQuantityView()
+        view.cart = cart
+
+        response = view.form_valid(form)
+
+        assert response.status_code == 200
+        assert Line.objects.filter(quantity=3).exists()
+
+    def test_form_valid_returns_400_status(self, form, product, admin_user):
+        """
+        Test that form valid method will return Bad Request if requested
+        quantity change is greater than available product.
+        """
+        cart = Cart.objects.create(owner=admin_user)
+        Line.objects.create(cart=cart, product=product)
         form.cleaned_data = {
             'id_': product.pk, 'slug': product.slug, 'quantity': 20}
 
@@ -396,8 +415,8 @@ class TestChangeQuantityView:
 
         response = view.form_valid(form)
 
-        assert response.status_code == 200
-        assert Line.objects.filter(quantity=20).exists()
+        assert response.status_code == 400
+        assert not Line.objects.filter(quantity=20).exists()
 
     # Functional tests for view. Using Django Client.
 
@@ -410,19 +429,19 @@ class TestChangeQuantityView:
         response = client.post(
             reverse('shoppingcart:update-quantity'),
             json.dumps(
-                {'id_': product.pk, 'slug': product.slug, 'quantity': 10}
+                {'id_': product.pk, 'slug': product.slug, 'quantity': 2}
             ),
             content_type='application/json'
         )
 
         assert response.status_code == 200
-        assert Line.objects.filter(quantity=10).exists()
+        assert Line.objects.filter(quantity=2).exists()
 
     def test_c_returns_badrequest_if_product_not_in_cart(self, client):
         response = client.post(
             reverse('shoppingcart:update-quantity'),
             json.dumps(
-                {'id_': 15, 'slug': 'hey-hey', 'quantity': 10}
+                {'id_': 15, 'slug': 'hey-hey', 'quantity': 2}
             ),
             content_type='application/json'
         )

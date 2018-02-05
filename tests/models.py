@@ -14,4 +14,4 @@ class ProductModel(models.Model):
         return self.price
 
     def in_stock(self):
-        return self.stock > 0
+        return self.stock
