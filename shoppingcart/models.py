@@ -44,7 +44,7 @@ class Line(models.Model):
                                 verbose_name=_('Product'),
                                 on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE,
-                             verbose_name=_('Cart'))
+                             verbose_name=_('Cart'), null=True)
     final_price = models.DecimalField(_('Final Price'),
                                       max_digits=9, decimal_places=2,
                                       validators=[
