@@ -20,7 +20,7 @@
     {% csrf_token %}
     <p>{{ form.username.label_tag }} {{ form.username }}</p>
     <p>{{ form.password.label_tag }} {{ form.password }}</p>
-    <input class="update" type="submit" value="login" />
+    <input class="update" type="submit" value="{% trans "login" %}" />
     <input type="hidden" name="next" value="{{ next }}" />
 </form>
 <div class="links">

@@ -29,7 +29,7 @@ input:focus {
 
 .update {
     float: right;
-    width: 150px;
+    width: auto;
     text-decoration: none;
     padding: 0 12px;
     border: 1px solid #3F3F3F;
@@ -95,8 +95,4 @@ input:focus {
 ul {
     list-style: none;
     color: rgb(119, 118, 118);
-}
-
-.active {
-    color: #F55549;
 }
