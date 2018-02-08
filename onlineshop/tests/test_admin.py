@@ -1,13 +1,15 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from django.contrib.admin.sites import AdminSite
+
+from shoppingcart.signals import price_changed
 
 from onlineshop.admin import ProductAdmin
 from onlineshop.models import Product
 
 from .factories import product_factory
+
 
 
 @pytest.fixture
@@ -78,3 +80,29 @@ def test_add_discount_action_intermediate_page(model_admin, products_qs, rf):
     assert all([item.discount == 20 for item in with_discount])
     assert updated_qs[0].discount == 0
     model_admin.message_user.assert_called()
+
+
+@pytest.mark.django_db
+def test_signal_sends_after_product_save(model_admin, products_qs, rf):
+    product = products_qs[0]
+    handler_called = False
+
+    class Form:
+        changed_data = ['price']
+
+    def handler(sender, product, **kwargs):
+        nonlocal handler_called
+        handler_called = True
+
+    price_changed.connect(handler)
+
+    request = rf.post('/')
+
+    model_admin.save_model(request, product, Form(), True)
+
+    assert handler_called
+
+    handler_called = False
+    model_admin.save_model(request, product, Form(), False)
+
+    assert not handler_called

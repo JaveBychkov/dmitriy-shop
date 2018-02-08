@@ -91,9 +91,12 @@ class Product(models.Model):
     def in_stock(self):
         return self.stock
 
-    in_stock.boolean = True
-    in_stock.admin_order_field = 'stock'
-    in_stock.short_description = _('In stock')
+    def _in_stock_admin(self):
+        return self.in_stock() > 0
+
+    _in_stock_admin.boolean = True
+    _in_stock_admin.admin_order_field = 'stock'
+    _in_stock_admin.short_description = _('In stock')
 
     def get_absolute_url(self):
         return reverse('onlineshop:product-detail', kwargs={'slug': self.slug})

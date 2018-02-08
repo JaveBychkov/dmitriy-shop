@@ -29,6 +29,10 @@ class TestProductModel:
         p = product_factory(title='Something', stock=0, to_db=False)
         assert p.in_stock() == 0
 
+    def test_admin_in_stock_returns_bool(self):
+        p = product_factory(title='Something', stock=23, to_db=False)
+        assert p._in_stock_admin() is True
+
     def test_minimal_price(self):
         p = product_factory(price=Decimal(-10.00), to_db=False)
         with pytest.raises(ValidationError):
@@ -51,6 +55,10 @@ class TestProductModel:
     def test_price_without_discount(self):
         p = product_factory(price=Decimal(3600.00), discount=0, to_db=False)
         assert p.get_price() == p.price
+
+    def test_get_absolute_url(self):
+        p = product_factory(title='Some', slug='some', to_db=False)
+        assert p.get_absolute_url() == '/products/some'
 
 
 class TestCategoryModel:

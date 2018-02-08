@@ -1,0 +1,31 @@
+{% extends "profiles/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="profile-wrap">
+{% if form.errors %}
+<p class="error">{% trans "Your username and password didn't match. Please try again." %}</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>{% trans "Your account doesn't have access to this page. To proceed, please login with an account that has access." %}</p>
+    {% else %}
+    <p>{% trans "Please login to see this page." %}</p>
+    {% endif %}
+{% endif %}
+
+<form class="form" method="post" action="{% url "profiles:login" %}">
+    {% csrf_token %}
+    <p>{{ form.username.label_tag }} {{ form.username }}</p>
+    <p>{{ form.password.label_tag }} {{ form.password }}</p>
+    <input class="update" type="submit" value="login" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+<div class="links">
+    <a href="{% url 'profiles:password_reset' %}">{% trans "Lost password?" %}</a>
+    <a href="{% url 'profiles:registration' %}">{% trans "Register" %}</a>
+</div>
+</div>
+{% endblock %}

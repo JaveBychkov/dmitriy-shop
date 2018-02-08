@@ -23,6 +23,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cart/', include('shoppingcart.urls')),
+    path('profile/', include('profiles.urls')),
     path('', include('onlineshop.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -4,7 +4,7 @@ __pycache__/
 *.sublime-workspace
 *.sqlite3
 *.vscode/
-*.coverage
+*.coverage*
 *.cache/
 *.po
 pytest.ini

@@ -1,0 +1,35 @@
+{% extends "profiles/base.html" %}
+{% load i18n %}
+
+{% block content %}
+{% autoescape off %}
+
+<div class="profile-wrap">
+{% if form.errors %}
+    <ul class="error">
+    {% for field in form %}
+        {% for error in field.errors %}
+            <li> {{ error }}</li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% endif %}
+<form class="form" action="{% url "profiles:registration" %}" method="POST">
+    {% csrf_token %}
+    <p>{{ form.username.label_tag }} {{ form.username }}</p>
+    <ul>
+        <li>{{ form.username.help_text }}</li>
+    </ul>
+    <p>{{ form.email.label_tag }} {{ form.email }}</p>
+    {{ form.email.help_text }}
+    <p>{{ form.password1.label_tag }} {{ form.password1 }}</p>
+    {{ form.password1.help_text }}
+    <p>{{ form.password2.label_tag }} {{ form.password2 }}</p>
+    <ul>
+        <li>{{ form.password2.help_text }}</li>
+    </ul>
+    <input class="update" type="submit" value="{% trans "Sign Up" %}" />
+</form>
+</div>
+{% endautoescape %}
+{% endblock content %}

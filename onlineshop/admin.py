@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.template.response import TemplateResponse
+from django.contrib.admin import helpers
 
 from mptt.admin import MPTTModelAdmin, TreeRelatedFieldListFilter
 
@@ -21,7 +22,8 @@ class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_added'
     actions = ('add_discount',)
 
-    list_display = ('title', 'price', 'discount', 'get_price', 'in_stock')
+    list_display = ('title', 'price', 'discount', 'get_price',
+                    '_in_stock_admin')
     list_editable = ('price', 'discount')
     list_filter = (
         ('category', TreeRelatedFieldListFilter),
@@ -29,10 +31,11 @@ class ProductAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        data = form.changed_data
+        if change:
+            data = form.changed_data
 
-        if any([x in data for x in ['price', 'discount']]):
-            price_changed.send(sender=self.__class__, product=obj)
+            if any([x in data for x in ['price', 'discount']]):
+                price_changed.send(sender=self.__class__, product=obj)
 
     def add_discount(self, request, queryset):
         """Custom action that allow to add discount for products in bulk

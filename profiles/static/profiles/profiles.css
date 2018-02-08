@@ -1,0 +1,102 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    width: 80%;
+    color: #3F3F3F;
+}
+
+.form p {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0 4px 0px;
+}
+
+input {
+    font-size: 90%;
+    width: 60%;
+    align-self: flex-end;
+    border: 1px solid #3F3F3F;
+}
+
+input:focus {
+    border: 1px solid #F55549;
+}
+
+input:focus {
+    border: 1px solid #F55549;
+}
+
+.update {
+    float: right;
+    width: 150px;
+    text-decoration: none;
+    padding: 0 12px;
+    border: 1px solid #3F3F3F;
+    color: #3F3F3F;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 28px;
+    transition: .1s ease-in;
+    align-self: flex-end;
+    margin-top: 5px;
+    cursor: pointer;
+}
+.update:hover {
+    background: #F55549;
+    color: #FFFFFF;
+}
+
+.errorlist {
+    color: #D8000C;
+}
+
+.profile-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.links {
+    width: 300px;
+    text-align: center;
+    color: #F55549;
+}
+
+.links a{
+    text-decoration: underline;
+    margin: 0 20px;
+}
+
+.links a:visited {
+    color: #F55549;
+}
+
+.success, .error {
+    border: 1px solid;
+    width: 600px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 3;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
+ul {
+    list-style: none;
+    color: rgb(119, 118, 118);
+}
+
+.active {
+    color: #F55549;
+}
