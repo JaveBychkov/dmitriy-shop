@@ -1,10 +1,9 @@
 import pytest
 
+from onlineshop.tests.factories import product_factory
 
 from shoppingcart.models import Cart, Line
 from shoppingcart.forms import BaseForm, ProductForm
-
-from .models import ProductModel
 
 
 class TestBaseForm:
@@ -24,7 +23,7 @@ class TestProductForm:
         with given id and slug in user shopping cart.
         """
         cart = Cart.objects.create()
-        p1 = ProductModel.objects.create(
+        p1 = product_factory(
             slug='something-1', price='1000', discount='5'
         )
         Line.objects.create(product=p1, cart=cart)

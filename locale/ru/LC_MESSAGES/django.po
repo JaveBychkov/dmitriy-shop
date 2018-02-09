@@ -1,0 +1,351 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-09 16:42+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: onlineshop/admin.py:55
+#, python-format, python-brace-format
+msgid "Succesfully added {percent}% discount to {number} products"
+msgstr "Успешно добавлена {percent}% dскидка для {number} продуктов"
+
+#: onlineshop/admin.py:79
+msgid "Add discount to products"
+msgstr "Добавить скидку для продуктов"
+
+#: onlineshop/apps.py:7
+msgid "Online Shop"
+msgstr "Онлайн Магазин"
+
+#: onlineshop/models.py:16
+msgid "Parent"
+msgstr "Родитель"
+
+#: onlineshop/models.py:20 onlineshop/models.py:61
+msgid "Title"
+msgstr "Название"
+
+#: onlineshop/models.py:24 onlineshop/models.py:56
+msgid "Category"
+msgstr "Категория"
+
+#: onlineshop/models.py:25
+msgid "Categories"
+msgstr "Категории"
+
+#: onlineshop/models.py:63
+msgid "Price"
+msgstr "Цена"
+
+#: onlineshop/models.py:68
+msgid "Discount in %"
+msgstr "Скидка в %"
+
+#: onlineshop/models.py:72
+msgid "Description"
+msgstr "Описание"
+
+#: onlineshop/models.py:74
+msgid "Upload Date"
+msgstr "Дата добавления"
+
+#: onlineshop/models.py:75
+msgid "Stock"
+msgstr "В наличии"
+
+#: onlineshop/models.py:76
+msgid "Image"
+msgstr "Изображение"
+
+#: onlineshop/models.py:84
+msgid "Final Price"
+msgstr "Финальная Цена"
+
+#: onlineshop/models.py:87 onlineshop/models.py:125
+msgid "Product"
+msgstr "Продукт"
+
+#: onlineshop/models.py:88
+msgid "Products"
+msgstr "Продукты"
+
+#: onlineshop/models.py:99
+#, fuzzy
+#| msgid "In stock:"
+msgid "In stock"
+msgstr "В наличии:"
+
+#: onlineshop/models.py:114 onlineshop/models.py:128 onlineshop/models.py:133
+msgid "Product Attribute"
+msgstr "Характеристика Продукта"
+
+#: onlineshop/models.py:117
+msgid "Attribute"
+msgstr "Характеристика"
+
+#: onlineshop/models.py:118
+msgid "Attributes"
+msgstr "Характеристики"
+
+#: onlineshop/models.py:134
+msgid "Extra Product's Attributes"
+msgstr "Дополнительная характеристика для продукта"
+
+#: onlineshop/templates/admin/add_discount.html:6
+msgid "Write down dicount to apply"
+msgstr "Напишите величину скидки для добавления"
+
+#: onlineshop/templates/admin/add_discount.html:13
+msgid "The discount will be applied to:"
+msgstr "Скида будет добавлена к следующим продуктам:"
+
+#: onlineshop/templates/onlineshop/_pagination.html:6
+msgid "first"
+msgstr "первая"
+
+#: onlineshop/templates/onlineshop/_pagination.html:7
+msgid "previous"
+msgstr "предыдущая"
+
+#: onlineshop/templates/onlineshop/_pagination.html:11
+msgid "Page"
+msgstr "Страница"
+
+#: onlineshop/templates/onlineshop/_pagination.html:11
+msgid "of"
+msgstr "из"
+
+#: onlineshop/templates/onlineshop/_pagination.html:15
+msgid "next"
+msgstr "следующая"
+
+#: onlineshop/templates/onlineshop/_pagination.html:16
+msgid "last"
+msgstr "последняя"
+
+#: onlineshop/templates/onlineshop/_product_card.html:15
+#: onlineshop/templates/onlineshop/product_detail.html:31
+msgid "Add to cart"
+msgstr "Добавить в корзину"
+
+#: onlineshop/templates/onlineshop/_product_card.html:17
+msgid "not available"
+msgstr "Нет в наличии"
+
+#: onlineshop/templates/onlineshop/_product_card.html:18
+#: onlineshop/templates/onlineshop/product_detail.html:34
+msgid "Notify me when available!"
+msgstr "Сообщите мне о поступлении!"
+
+#: onlineshop/templates/onlineshop/base.html:13
+msgid "3D Shop"
+msgstr "3D Магазин"
+
+#: onlineshop/templates/onlineshop/base.html:18
+msgid "HOME"
+msgstr "ГЛАВНАЯ"
+
+#: onlineshop/templates/onlineshop/base.html:19
+msgid "DELIVERY"
+msgstr "ДОСТАВКА"
+
+#: onlineshop/templates/onlineshop/base.html:20
+msgid "CONTACT"
+msgstr "ОБРАТНАЯ СВЯЗЬ"
+
+#: onlineshop/templates/onlineshop/base.html:22
+msgid "MY PROFILE"
+msgstr "МОЙ ПРОФИЛЬ"
+
+#: onlineshop/templates/onlineshop/base.html:23
+msgid "LOGOUT"
+msgstr "ВЫХОД"
+
+#: onlineshop/templates/onlineshop/base.html:25
+msgid "LOGIN"
+msgstr "ВХОД"
+
+#: onlineshop/templates/onlineshop/base.html:27
+msgid "CART"
+msgstr "КОРЗИНА"
+
+#: onlineshop/templates/onlineshop/category_detail.html:10
+msgid "No products for this category"
+msgstr "Нет продуктов для этой категории"
+
+#: onlineshop/templates/onlineshop/product_detail.html:26
+msgid "In stock:"
+msgstr "В наличии:"
+
+#: onlineshop/templates/onlineshop/product_detail.html:26
+msgid "Yes!"
+msgstr "Да!"
+
+#: onlineshop/templates/onlineshop/product_detail.html:26
+msgid "No :("
+msgstr "Нет :("
+
+#: onlineshop/templates/onlineshop/product_detail.html:33
+msgid "Product is not available"
+msgstr "Продукта нет в наличии"
+
+#: profiles/apps.py:7
+msgid "Profiles"
+msgstr "Профили"
+
+#: profiles/forms.py:26
+msgid "Email"
+msgstr ""
+
+#: profiles/models.py:10
+msgid "The postal code must consist of 6 digits"
+msgstr "Почтовый индекс должен состоять из 6 цифр"
+
+#: profiles/models.py:14
+msgid "User"
+msgstr "Пользователь"
+
+#: profiles/models.py:16
+msgid "Country"
+msgstr "Страна"
+
+#: profiles/models.py:17
+msgid "City"
+msgstr "Город"
+
+#: profiles/models.py:18
+msgid "Street"
+msgstr "Улица"
+
+#: profiles/models.py:19
+msgid "Postcode"
+msgstr "Почтовый индекс"
+
+#: profiles/models.py:22
+msgid "House number"
+msgstr "Номер дома"
+
+#: profiles/models.py:23
+msgid "Apartment"
+msgstr "Квартира"
+
+#: profiles/templates/profiles/login.html:8
+msgid "Your username and password didn't match. Please try again."
+msgstr "Неизвестная комбинация имени и пароля. Попробуйте еще раз."
+
+#: profiles/templates/profiles/login.html:13
+msgid ""
+"Your account doesn't have access to this page. To proceed, please login with "
+"an account that has access."
+msgstr ""
+"У вас нет доступа к этой странице. Для продолжения, пожалуйста, войдите на "
+"сайт используя существующую учетную запись."
+
+#: profiles/templates/profiles/login.html:15
+msgid "Please login to see this page."
+msgstr "Пожалуйста войдите чтобы увидеть эту страницу."
+
+#: profiles/templates/profiles/login.html:23
+msgid "login"
+msgstr "Войти"
+
+#: profiles/templates/profiles/login.html:27
+msgid "Lost password?"
+msgstr "Забыли пароль?"
+
+#: profiles/templates/profiles/login.html:28
+msgid "Register"
+msgstr "Регистрация"
+
+#: profiles/templates/profiles/password_reset.html:8
+msgid "Reset password"
+msgstr "Восстановить пароль"
+
+#: profiles/templates/profiles/password_reset_confirm.html:7
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+"Пожалуйста введите свой новый пароль дважды, чтобы мы могли убедиться что вы "
+"ввели его верно"
+
+#: profiles/templates/profiles/password_reset_confirm.html:11
+msgid "New password:"
+msgstr "Новый пароль:"
+
+#: profiles/templates/profiles/password_reset_confirm.html:14
+msgid "Confirm password:"
+msgstr "Подтвердите пароль:"
+
+#: profiles/templates/profiles/password_reset_confirm.html:16
+msgid "Change my password"
+msgstr "Сменить мой пароль"
+
+#: profiles/templates/profiles/password_reset_confirm.html:21
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+"Ссылка для восстановления пароля не действительна, может быть она уже была "
+"использована.  Пожалуйста, попробуйте восстановить пароль еще раз."
+
+#: profiles/templates/profiles/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+"Вы получили это письмо потому кто-то запросил восстановление пароля для "
+"вашей учетной записи на сайте %(site_name)s."
+
+#: profiles/templates/profiles/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr "Пожалуйста, пройдите по ссылке и установитее новый пароль:"
+
+#: profiles/templates/profiles/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr "Ваше никнейм, на случай если вы забыли:"
+
+#: profiles/templates/profiles/password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr "Спасибо за то что выбрали нас!"
+
+#: profiles/templates/profiles/password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "Команда сайта %(site_name)s"
+
+#: profiles/templates/profiles/profile.html:19
+msgid "Update"
+msgstr "Обновить"
+
+#: profiles/templates/profiles/registration.html:31
+msgid "Sign Up"
+msgstr "Зарегистрироваться"
+
+#: profiles/views.py:26
+msgid "Your profile was successfully updated!"
+msgstr "Ваш профиль успешно обновлен!"
+
+#: profiles/views.py:30
+msgid "Please correct the errors below."
+msgstr "Пожалуйста, исправьте ошибки ниже."
+
+#~ msgid "ABOUT US"
+#~ msgstr "О НАС"

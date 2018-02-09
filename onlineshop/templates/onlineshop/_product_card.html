@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="product-item">
-    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}"></a>
+    <a href="{{ product.get_absolute_url }}"><img src="{{ product.image_url|default_if_none:'http://via.placeholder.com/270x270' }}"></a>
     <div class="product-list">
     <h3>{{ product.title }}</h3>
         {% if product.in_stock %}

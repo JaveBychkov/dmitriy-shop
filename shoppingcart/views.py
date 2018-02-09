@@ -8,18 +8,10 @@ from django.http import JsonResponse
 from django.utils.translation import ugettext as _
 from django.views import View, generic
 
+from onlineshop.models import Product
+
 from .forms import PriceChangedForm, ProductForm, ProductQuantityForm
 from .models import Cart, Line
-
-
-try:
-    Product = apps.get_model(settings.PRODUCT_MODEL)
-except LookupError:
-    raise ImproperlyConfigured('Define PRODUCT_MODEL in settings')
-except ValueError:
-    raise ImproperlyConfigured(
-        'PRODUCT_MODEL should be in the following format: "MyApp.ModelName"'
-    )
 
 
 class GetJsonDataMixin:

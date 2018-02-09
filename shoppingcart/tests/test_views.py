@@ -4,20 +4,21 @@ import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.urls import reverse
 
+from onlineshop.tests.factories import product_factory
+
 from shoppingcart.models import Cart, Line
 from shoppingcart.views import (AddProductView, BaseEditCartView,
                                 CartDetailView, CartMixin, ChangeQuantityView,
                                 GetJsonDataMixin, RemoveProductView,
                                 PriceChangedView)
 
-from .models import ProductModel
 
 pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
 def product():
-    return ProductModel.objects.create(
+    return product_factory(
         price=1000, discount=0, slug='some-some', stock=5
     )
 
@@ -540,7 +541,6 @@ class TestCartDetailView:
         assert response.status_code == 200
         assert response.context['total'] == 0
         assert not response.context['price_changed']
-        assert 'no items in your cart' in response.content.decode('utf-8')
 
     def test_c_get_with_items_in_cart(self, client, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
@@ -555,7 +555,6 @@ class TestCartDetailView:
         assert response.status_code == 200
         assert response.context['total'] == 1000
         assert not response.context['price_changed']
-        assert 'no items in your cart' not in response.content.decode('utf-8')
 
     def test_c_get_with_price_changed_lines(self, client, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
@@ -566,12 +565,9 @@ class TestCartDetailView:
         response = client.get(
             reverse('shoppingcart:cart-detail')
         )
-        msg = 'products in your shopping cart has changed in price'
         assert response.status_code == 200
         assert response.context['total'] == 1000
         assert response.context['price_changed']
-        assert 'no items in your cart' not in response.content.decode('utf-8')
-        assert msg in response.content.decode('utf-8')
 
     def test_c_get_with_cart_in_session(self, client):
         cart = Cart.objects.create()
@@ -586,4 +582,3 @@ class TestCartDetailView:
         assert response.status_code == 200
         assert response.context['total'] == 0
         assert not response.context['price_changed']
-        assert 'no items in your cart' in response.content.decode('utf-8')

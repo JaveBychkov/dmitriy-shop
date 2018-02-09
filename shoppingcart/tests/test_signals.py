@@ -1,9 +1,9 @@
 import pytest
 
+from onlineshop.tests.factories import product_factory
+
 from shoppingcart.signals import price_changed, price_changed_callback
 from shoppingcart.models import Cart, Line
-
-from .models import ProductModel
 
 
 def handler(sender, product, **kwargs):
@@ -16,7 +16,7 @@ class TestSignals:
 
     def test_signal_sends_with_product_argument(self):
 
-        product = ProductModel.objects.create(price=1000, discount=5)
+        product = product_factory(price=1000, discount=5)
 
         price_changed.connect(handler)
 
@@ -31,7 +31,7 @@ class TestSignals:
         field on all shopping cart lines that contain passed product.
         """
         cart = Cart.objects.create()
-        product = ProductModel.objects.create(price=1000, discount=5)
+        product = product_factory(price=1000, discount=5)
         line = Line.objects.create(cart=cart, product=product)
 
         price_changed.connect(price_changed_callback)

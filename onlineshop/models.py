@@ -101,6 +101,11 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('onlineshop:product-detail', kwargs={'slug': self.slug})
 
+    @property
+    def image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+
     def __str__(self):
         return self.title
 

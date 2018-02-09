@@ -11,7 +11,7 @@
     {% for line in object.line_set.all %}
         {% with product=line.product %}
         <div class="line" data-remove="{% url "shoppingcart:remove-product" %}" data-update="{% url "shoppingcart:update-quantity" %}">
-            <img src="{{ product.image.url }}" width="100" height="100" alt="" />
+            <img src="{{ product.image_url|default_if_none:'http://via.placeholder.com/270x270' }}" width="100" height="100" alt="" />
             <a class="p-title" href="{{ product.get_absolute_url }}">{{ product.title }}</a>
             <input class="quantity" type="number" value="{{ line.quantity }}" min="1" data-id_="{{ product.id }}" data-slug="{{ product.slug }}">
             <p class="price" data-price-for-one="{{ product.get_price }}">₽ {{ line.total_price }}</p>
