@@ -1,0 +1,26 @@
+{% load static %}
+{% load i18n %}
+
+<div class="cart">
+    {% if price_changed %}
+    <div class="message">
+        <p>{% trans "One or more products in your shopping cart has changed in price" %}</p>
+        <button type="button" class="confirm" data-url="{% url "shoppingcart:price-changed" %}">{% trans "Ok, got it!" %}</button>
+    </div>
+    {% endif %}
+    {% for line in object.line_set.all %}
+        {% with product=line.product %}
+        <div class="line" data-remove="{% url "shoppingcart:remove-product" %}" data-update="{% url "shoppingcart:update-quantity" %}">
+            <img src="{{ product.image.url }}" width="100" height="100" alt="" />
+            <a class="p-title" href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+            <input class="quantity" type="number" value="{{ line.quantity }}" min="1" data-id_="{{ product.id }}" data-slug="{{ product.slug }}">
+            <p class="price" data-price-for-one="{{ product.get_price }}">₽ {{ line.total_price }}</p>
+            <!--SVG from https://www.flaticon.com/free-icon/remove-symbol_25298-->
+            <a class="remove" data-id_="{{ product.id }}" data-slug="{{ product.slug }}"><img src="{% static "shoppingcart/remove.svg" %}" alt="remove" height="10" width="10"></a>
+        </div>
+        {% endwith %}
+    {% empty %}
+        <p>{% trans "There is no items in your cart!" %}</p>
+    {% endfor %}
+    <p>{% trans "Total:" %} ₽ <span class="total">{{ total }}</span></p>
+</div>

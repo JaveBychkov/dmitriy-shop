@@ -1,0 +1,57 @@
+.cart {
+    width: 100%;
+}
+.line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #E0E0E0;
+    color: #3F3F3F;
+}
+
+.p-title {
+    width: 300px;
+    font-size: 18px;
+    color: inherit;
+}
+
+.line:hover {
+    color: #F55549;
+    border-bottom: 1px solid #F55549;
+    transition: 0.2s ease;
+}
+
+.remove {
+    cursor: pointer;
+}
+
+.remove:hover{
+    color: #F55549
+}
+
+.quantity {
+    width: 40px;
+}
+
+.message {
+    height: 90px;
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    color: #9F6000;
+    border: 1px solid #9F6000;
+    background-color: #FEEFB3;
+}
+
+.message > button {
+    margin: 0 auto;
+    border: 1px solid #9F6000;
+    background-color: #FEEFB3;
+    padding: 2px 20px;
+}
+
+.message > button:hover {
+    border-color: rgb(0, 159, 0);
+    cursor: pointer;
+}
