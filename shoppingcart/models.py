@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from orders.models import Order
+
 
 class Cart(models.Model):
     """
@@ -43,8 +45,11 @@ class Line(models.Model):
     product = models.ForeignKey(settings.PRODUCT_MODEL,
                                 verbose_name=_('Product'),
                                 on_delete=models.CASCADE)
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE,
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,
                              verbose_name=_('Cart'), null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+                              verbose_name=_('Order'), null=True,
+                              related_name='products')
     final_price = models.DecimalField(_('Final Price'),
                                       max_digits=9, decimal_places=2,
                                       validators=[

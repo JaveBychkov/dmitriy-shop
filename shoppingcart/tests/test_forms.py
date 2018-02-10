@@ -28,7 +28,7 @@ class TestProductForm:
         )
         Line.objects.create(product=p1, cart=cart)
 
-        f = ProductForm({'id_': p1.pk, 'slug': p1.slug}, cart=cart)
+        f = ProductForm(data={'id_': p1.pk, 'slug': p1.slug}, cart=cart)
 
         assert f.is_valid()
         assert all([x in f.cleaned_data for x in ['id_', 'slug']])
@@ -41,7 +41,7 @@ class TestProductForm:
         cart = Cart.objects.create()
 
         f = ProductForm(
-            {'id_': 18, 'slug': 'some-slug'}, cart=cart
+            data={'id_': 18, 'slug': 'some-slug'}, cart=cart
         )
 
         assert not f.is_valid()

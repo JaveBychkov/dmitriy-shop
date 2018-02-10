@@ -9,8 +9,8 @@ class BaseForm(forms.Form):
     Additionally sets self.cart attribute on form instance.
     """
 
-    def __init__(self, *args, **kwargs):
-        self.cart = kwargs.pop('cart')
+    def __init__(self, cart=None, *args, **kwargs):
+        self.cart = cart
         super().__init__(*args, **kwargs)
 
 
