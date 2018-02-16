@@ -14,8 +14,8 @@ class UserForm(forms.ModelForm):
         # TODO: Find a better way to make email unique.
         # unique_together ?
         email = self.cleaned_data['email']
-        instance_email = self.instance.email
-        if instance_email == email:
+        initial_email = self.initial.get('email')
+        if initial_email == email:
             return email
         if email and User.objects.filter(email=email).exists():
             raise forms.ValidationError(
