@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -39,7 +38,7 @@ def update_profile(request):
 
 class CopySessionCartAfterLoginView(LoginView):
 
-    # TODO: Consider of using separate redirect view.
+    # TODO: Consider using separate redirect view.
 
     redirect_authenticated_user = True
 
@@ -53,12 +52,12 @@ class CopySessionCartAfterLoginView(LoginView):
 
         cart_id = self.request.session.pop('cart_id', None)
         if cart_id is not None:
-            session_cart = Cart.objects.get(pk=cart_id)
             user_cart = Cart.objects.get_or_create(owner=user)[0]
 
             lines = Line.objects.filter(
-                Q(cart=session_cart) | Q(cart=user_cart)
+                cart__in=[cart_id, user_cart.pk]
             ).order_by('product_id').distinct('product')
+
             user_cart.line_set.set(lines, clear=True)
         return HttpResponseRedirect(self.get_success_url())
 
