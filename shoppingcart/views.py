@@ -28,37 +28,7 @@ class GetJsonDataMixin:
         return {'data': data}
 
 
-class CartMixin:
-    """
-    Mixin that provides methods to get cart object for user.
-
-    If user is authenticated he either get his already existing cart or new 
-    cart will be created and associated with user.
-
-    If user is not authenticated get_session_cart will try to get cart id from
-    user session and if this id exists will return user's cart, otherwise new
-    cart will be created and this cart id will be stored in user's session so
-    user will get the same cart on his next visit.
-    """
-
-    def get_cart(self):
-        if self.request.user.is_authenticated:
-            return Cart.objects.get_or_create(owner=self.request.user)[0]
-        else:
-            return self.get_session_cart()
-
-    def get_session_cart(self):
-        cart_id = self.request.session.get('cart_id')
-        # We can filter qs using None and catch DoesNotExist but it's
-        # less explicit than checking if it's None.
-        if cart_id is None:
-            cart = Cart.objects.create()
-            self.request.session['cart_id'] = cart.id
-            return cart
-        return Cart.objects.get(pk=cart_id)
-
-
-class BaseEditCartView(GetJsonDataMixin, CartMixin, View):
+class BaseEditCartView(GetJsonDataMixin, View):
     """
     Base view that define default methods for all views that edit cart.
     """
@@ -97,23 +67,25 @@ class BaseEditCartView(GetJsonDataMixin, CartMixin, View):
         user cart.
         """
         data = super().get_form_data()
-        self.cart = self.get_cart()
-        data.update({'cart': self.get_cart()})
+
+        user_and_session = self.request.user, self.request.session
+        self.cart = Cart.objects.get_cart(*user_and_session)
+
+        data.update({'cart': self.cart})
         return data
 
 
 class AddProductView(BaseEditCartView):
-    """View that handles requests for adding products to shoppingcart
+    """
+    View that handles requests for adding products to shoppingcart
 
     Expects Ajax request with data in following format:
 
-    {"id_": 12, "slug": "some-slug"}
+    {"id_": 12}
 
     Where:
         id_ : int
             Product id.
-        slug : str
-            Product slug.
     """
 
     form_class = ProductForm
@@ -140,10 +112,11 @@ class AddProductView(BaseEditCartView):
         or product not in stock.
         In both cases such requests results in Bad Request response.
         """
-        id_, slug = form.cleaned_data['id_'], form.cleaned_data['slug']
-        try:
-            product = Product.objects.get(id=id_, slug=slug)
-        except Product.DoesNotExist:
+
+        # We need explicitly check for product to be None because of how our
+        # product form works
+        product = form.get_product()
+        if product is None:
             return super().form_invalid(form)
 
         if not product.in_stock():
@@ -151,8 +124,7 @@ class AddProductView(BaseEditCartView):
                 message=_('Product not in stock'), status=400
             )
 
-        cart_line = Line.objects.create(product=product, cart=self.cart)
-        self.cart.line_set.add(cart_line)
+        self.cart.add_product(product)
 
         return self.render_to_response(
             message=_('Product successfuly added to cart!')
@@ -160,27 +132,25 @@ class AddProductView(BaseEditCartView):
 
 
 class RemoveProductView(BaseEditCartView):
-
-    """View that handles requests for removing products from user's cart
+    """
+    View that handles requests for removing products from user's cart
 
     Expects Ajax request with data in following format:
 
-    {"id_": 12, "slug": "some-slug"}
+    {"id_": 12}
 
     Where:
         id_ : int
             Product id.
-        slug : str
-            Product slug.
     """
 
     form_class = ProductForm
 
     def form_valid(self, form):
         """Removes product from user's cart."""
-        id_, slug = form.cleaned_data['id_'], form.cleaned_data['slug']
+        product = form.get_product()
 
-        self.cart.line_set.filter(product__id=id_, product__slug=slug).delete()
+        self.cart.remove_product(product)
 
         return self.render_to_response(
             message=_('Successfully removed')
@@ -188,18 +158,16 @@ class RemoveProductView(BaseEditCartView):
 
 
 class ChangeQuantityView(BaseEditCartView):
-
-    """View that handles requests for changing quantity of product in cart
+    """
+    View that handles requests for changing quantity of product in cart
 
     Expects Ajax request with data in following format:
 
-    {"id_": 12, "slug": "some-slug", "quantity": "2"}
+    {"id_": 12, "quantity": "2"}
 
     Where:
         id_ : int
             Product id.
-        slug : str
-            Product slug.
         quantity : int
             New quantity of product.
     """
@@ -208,22 +176,15 @@ class ChangeQuantityView(BaseEditCartView):
 
     def form_valid(self, form):
         """Changes product's quantity."""
-        id_, slug = form.cleaned_data['id_'], form.cleaned_data['slug']
+        product = form.get_product()
         quantity = form.cleaned_data['quantity']
 
-        line = self.cart.line_set.filter(
-            product__id=id_, product__slug=slug
-        ).select_related('product')
-
-        line = line.get()
-
-        if line.product.in_stock() < quantity:
+        if product.in_stock() < quantity:
             return self.render_to_response(
                 message=_('Product not in stock'), status=400
             )
 
-        line.quantity = form.cleaned_data['quantity']
-        line.save()
+        self.cart.change_product_quantity(product, quantity)
 
         return self.render_to_response(message=_('ok'))
 
@@ -252,11 +213,7 @@ class PriceChangedView(BaseEditCartView):
 
 class CartDetailView(generic.DetailView):
 
-    model = Cart
-    prefetch = Prefetch(
-        'line_set', queryset=Line.objects.select_related('product')
-    )
-    queryset = Cart.objects.prefetch_related(prefetch)
+    model = Cart  # We don't actually need it.
 
     def get_context_data(self, **kwargs):
         """Gather additional context data.
@@ -272,30 +229,13 @@ class CartDetailView(generic.DetailView):
         """
         context = super().get_context_data(**kwargs)
 
-        line_set = self.object.line_set.all()
-        prices = [line.total_price() for line in line_set]
-
-        context['total'] = sum(prices)
-        context['price_changed'] = any([x.price_changed for x in line_set])
+        context['total'] = self.object.get_total_price()
+        context['price_changed'] = self.object.any_product_price_changed()
         return context
 
     def get_object(self):
         """
         Get associated cart object for user.
         """
-        if self.request.user.is_authenticated:
-            try:
-                obj = self.queryset.filter(owner=self.request.user).get()
-            except Cart.DoesNotExist:
-                obj = Cart.objects.create(owner=self.request.user)
-        else:
-            cart_id = self.request.session.get('cart_id')
-            # We can filter qs using None and catch DoesNotExist but it's
-            # less explicit than checking if it's None.
-            if cart_id is not None:
-                obj = self.queryset.filter(pk=cart_id).get()
-            else:
-                obj = Cart.objects.create()
-                self.request.session['cart_id'] = obj.pk
-
-        return obj
+        user_and_session = self.request.user, self.request.session
+        return Cart.objects.get_full_cart(*user_and_session)

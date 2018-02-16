@@ -1,16 +1,19 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from onlineshop.models import Product
+
 
 class BaseForm(forms.Form):
     """
     Base form for other forms in project.
 
-    Additionally sets self.cart attribute on form instance.
+    The 'cart' parameter is set for validation purposes.
     """
 
     def __init__(self, cart=None, *args, **kwargs):
         self.cart = cart
+        self.cached_product = None
         super().__init__(*args, **kwargs)
 
 
@@ -18,26 +21,30 @@ class ProductForm(BaseForm):
     """
     Product form.
 
-    Excepts product id and product slug as it's data.
+    Excepts product id as it's data.
     """
 
     id_ = forms.IntegerField(min_value=0)
-    slug = forms.SlugField()
 
     def clean(self):
-        """Validate that product with given id and slug exists in user cart."""
         cleaned_data = super().clean()
-        id_, slug = cleaned_data.get('id_'), cleaned_data.get('slug')
+        id_ = cleaned_data.get('id_')
+        try:
+            self.cached_product = Product.objects.get(pk=id_)
+        except Product.DoesNotExist:
+            raise forms.ValidationError(_('Invalid data'), code='invalid')
 
-        product_in_cart = self.cart.line_set.filter(
-            product__id=id_, product__slug=slug
-        ).exists()
+        self.check_product_in_cart()
 
-        if product_in_cart:
-            return cleaned_data
-        else:
-            self.add_error(
-                None, forms.ValidationError(_('Product not in cart'))
+        return cleaned_data
+
+    def get_product(self):
+        return self.cached_product
+
+    def check_product_in_cart(self):
+        if not self.cart.line_set.filter(product=self.cached_product).exists():
+            raise forms.ValidationError(
+                _('Product not in cart'), code='invalid'
             )
 
 

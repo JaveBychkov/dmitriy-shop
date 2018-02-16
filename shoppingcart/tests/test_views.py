@@ -8,7 +8,7 @@ from onlineshop.tests.factories import product_factory
 
 from shoppingcart.models import Cart, Line
 from shoppingcart.views import (AddProductView, BaseEditCartView,
-                                CartDetailView, CartMixin, ChangeQuantityView,
+                                CartDetailView, ChangeQuantityView,
                                 GetJsonDataMixin, RemoveProductView,
                                 PriceChangedView)
 
@@ -17,19 +17,16 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def product():
-    return product_factory(
-        price=1000, discount=0, slug='some-some', stock=5
-    )
-
-
-@pytest.fixture
-def form():
+def form_class():
     class Form:
 
-        def __init__(self, *args, **kwargs):
+        def __init__(self, cached_product=None, *args, **kwargs):
+            self.cached_product = cached_product
             self.args = args
             self.kwargs = kwargs
+
+        def get_product(self):
+            return self.cached_product
 
         def is_valid(self):
             return self.isvalid
@@ -38,40 +35,21 @@ def form():
 
 
 @pytest.fixture
-def valid_form(form):
-    form.isvalid = True
-    return form
+def form(form_class):
+    return form_class()
 
 
 @pytest.fixture
-def invalid_form(form):
-    form.isvalid = False
-    form.errors = {'some_error': 'some_desc'}
-    return form
+def valid_form(form_class):
+    form_class.isvalid = True
+    return form_class
 
 
 @pytest.fixture
-def session_request(rf):
-    """Don't actually session, just interface that some methods needs"""
-    request = rf.post(
-        '/', json.dumps({'id_': '2'}), content_type='application/json'
-    )
-    request.session = {}
-    return request
-
-
-@pytest.fixture
-def a_request(session_request):
-    """AnonymousUser request"""
-    session_request.user = AnonymousUser()
-    return session_request
-
-
-@pytest.fixture
-def u_request(session_request, admin_user):
-    """Authenticated request"""
-    session_request.user = admin_user
-    return session_request
+def invalid_form(form_class):
+    form_class.isvalid = False
+    form_class.errors = {'some_error': 'some_desc'}
+    return form_class
 
 
 @pytest.fixture
@@ -119,63 +97,6 @@ class TestGetAjaxDataMixin:
         data = view.get_form()
 
         assert data == {'id_': '2'}
-
-
-class TestCartMixin:
-
-    def test_returns_cart_by_id_in_session(self, a_request):
-        cart = Cart.objects.create()
-        a_request.session['cart_id'] = cart.pk
-        mixin = CartMixin()
-        mixin.request = a_request
-
-        assert cart == mixin.get_session_cart()
-
-    def test_returns_new_cart_if_no_id_in_session(self, a_request):
-        """
-        Test that get_session_cart_method will return new cart if
-        there is no cart_id in session, and test that it will also
-        set cart_id to returned cart
-        """
-        mixin = CartMixin()
-        mixin.request = a_request
-        cart = mixin.get_session_cart()
-
-        assert isinstance(cart, Cart)
-        assert mixin.request.session.get('cart_id') == cart.pk
-
-    def test_get_cart_returns_cart_for_user(self, u_request):
-
-        mixin = CartMixin()
-
-        cart = Cart.objects.create(owner=u_request.user)
-        mixin.request = u_request
-
-        assert cart == mixin.get_cart()
-
-    def test_get_cart_return_new_cart_for_user(self, u_request):
-        mixin = CartMixin()
-        user = u_request.user
-
-        mixin.request = u_request
-
-        cart = mixin.get_cart()
-
-        assert isinstance(cart, Cart)
-        assert user.cart == cart
-
-    def test_get_session_cart_if_user_not_authenticated(self, a_request):
-        def get_session_cart(self):
-            self.called = True
-
-        mixin = CartMixin()
-        mixin.request = a_request
-        # https://docs.python.org/3.6/howto/descriptor.html#functions-and-methods
-        mixin.get_session_cart = get_session_cart.__get__(mixin)
-
-        mixin.get_cart()
-
-        assert mixin.called
 
 
 class TestBaseEditCartView:
@@ -248,7 +169,7 @@ class TestAddProductView:
 
     def test_return_badrequest_if_product_does_not_exists(self, form):
         form.errors = {}
-        form.cleaned_data = {'id_': 23, 'slug': 'some-some'}
+        form.cleaned_data = {'id_': 23}
         view = AddProductView()
 
         response = view.form_invalid(form)
@@ -256,28 +177,32 @@ class TestAddProductView:
         assert response.status_code == 400
 
     def test_adds_product_to_cart(self, product, form):
+        form.cached_product = product
         cart = Cart.objects.create()
-        form.cleaned_data = {'id_': product.pk, 'slug': product.slug}
+        form.cleaned_data = {'id_': product.pk}
         view = AddProductView()
         view.cart = cart
 
         response = view.form_invalid(form)
 
         assert response.status_code == 200
-        assert cart.line_set.filter(product=product).exists()
+        assert cart.line_set.filter(product=product).exists() is True
 
-    def test_dont_add_product_to_cart_if_not_in_stock(self, product, form,):
+    def test_dont_add_product_to_cart_if_not_in_stock(self, product, form):
         cart = Cart.objects.create()
         product.stock = 0
         product.save()
-        form.cleaned_data = {'id_': product.pk, 'slug': product.slug}
+
+        form.cached_product = product
+        form.cleaned_data = {'id_': product.pk}
+
         view = AddProductView()
         view.cart = cart
 
         response = view.form_invalid(form)
 
         assert response.status_code == 400
-        assert not cart.line_set.filter(product=product).exists()
+        assert cart.line_set.filter(product=product).exists() is False
 
     # Functional tests for view. Using Django Client.
 
@@ -288,12 +213,12 @@ class TestAddProductView:
         """
         response = client.post(
             reverse('shoppingcart:add-product'),
-            json.dumps({'id_': product.pk, 'slug': product.slug}),
+            json.dumps({'id_': product.pk}),
             content_type='application/json'
         )
 
         assert response.status_code == 200
-        assert product.line_set.all().exists()
+        assert product.line_set.all().exists() is True
 
     def test_c_dont_adds_product_if_not_in_stock(self, client, product):
         """
@@ -305,12 +230,12 @@ class TestAddProductView:
 
         response = client.post(
             reverse('shoppingcart:add-product'),
-            json.dumps({'id_': product.pk, 'slug': product.slug}),
+            json.dumps({'id_': product.pk}),
             content_type='application/json'
         )
 
         assert response.status_code == 400
-        assert not product.line_set.all().exists()
+        assert product.line_set.all().exists() is False
 
     def test_c_dont_adds_if_already_in_cart(self, client, product, admin_user):
         """
@@ -324,17 +249,17 @@ class TestAddProductView:
 
         response = client.post(
             reverse('shoppingcart:add-product'),
-            json.dumps({'id_': product.pk, 'slug': product.slug}),
+            json.dumps({'id_': product.pk}),
             content_type='application/json'
         )
 
         assert response.status_code == 400
-        assert product.line_set.all().exists()
+        assert product.line_set.all().exists() is True
 
     def test_c_dont_adds_if_product_does_not_exists(self, client):
         response = client.post(
             reverse('shoppingcart:add-product'),
-            json.dumps({'id_': 18, 'slug': 'hey-hey'}),
+            json.dumps({'id_': 18}),
             content_type='application/json'
         )
 
@@ -347,7 +272,8 @@ class TestRemoveProductView:
         cart = Cart.objects.create()
         Line.objects.create(cart=cart, product=product)
 
-        form.cleaned_data = {'id_': product.pk, 'slug': product.slug}
+        form.cached_product = product
+        form.cleaned_data = {'id_': product.pk}
 
         view = RemoveProductView()
         view.cart = cart
@@ -355,7 +281,7 @@ class TestRemoveProductView:
         response = view.form_valid(form)
 
         assert response.status_code == 200
-        assert not cart.line_set.all().exists()
+        assert cart.line_set.all().exists() is False
 
     # Functional tests for view. Using Django Client.
 
@@ -367,17 +293,17 @@ class TestRemoveProductView:
 
         response = client.post(
             reverse('shoppingcart:remove-product'),
-            json.dumps({'id_': product.pk, 'slug': product.slug}),
+            json.dumps({'id_': product.pk}),
             content_type='application/json'
         )
 
         assert response.status_code == 200
-        assert not cart.line_set.all().exists()
+        assert cart.line_set.all().exists() is False
 
     def test_c_return_badrequest_if_product_not_in_cart(self, client):
         response = client.post(
             reverse('shoppingcart:remove-product'),
-            json.dumps({'id_': 23, 'slug': 'something'}),
+            json.dumps({'id_': 23}),
             content_type='application/json'
         )
 
@@ -389,9 +315,10 @@ class TestChangeQuantityView:
     def test_form_valid_changes_quantity(self, form, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
         Line.objects.create(cart=cart, product=product)
-        product.save()
+        
+        form.cached_product = product
         form.cleaned_data = {
-            'id_': product.pk, 'slug': product.slug, 'quantity': 3}
+            'id_': product.pk, 'quantity': 3}
 
         view = ChangeQuantityView()
         view.cart = cart
@@ -399,7 +326,7 @@ class TestChangeQuantityView:
         response = view.form_valid(form)
 
         assert response.status_code == 200
-        assert Line.objects.filter(quantity=3).exists()
+        assert Line.objects.filter(quantity=3).exists() is True
 
     def test_form_valid_returns_400_status(self, form, product, admin_user):
         """
@@ -408,8 +335,10 @@ class TestChangeQuantityView:
         """
         cart = Cart.objects.create(owner=admin_user)
         Line.objects.create(cart=cart, product=product)
+
+        form.cached_product = product
         form.cleaned_data = {
-            'id_': product.pk, 'slug': product.slug, 'quantity': 20}
+            'id_': product.pk, 'quantity': 20}
 
         view = ChangeQuantityView()
         view.cart = cart
@@ -417,7 +346,7 @@ class TestChangeQuantityView:
         response = view.form_valid(form)
 
         assert response.status_code == 400
-        assert not Line.objects.filter(quantity=20).exists()
+        assert Line.objects.filter(quantity=20).exists() is False
 
     # Functional tests for view. Using Django Client.
 
@@ -430,25 +359,24 @@ class TestChangeQuantityView:
         response = client.post(
             reverse('shoppingcart:update-quantity'),
             json.dumps(
-                {'id_': product.pk, 'slug': product.slug, 'quantity': 2}
+                {'id_': product.pk, 'quantity': 2}
             ),
             content_type='application/json'
         )
 
         assert response.status_code == 200
-        assert Line.objects.filter(quantity=2).exists()
+        assert Line.objects.filter(quantity=2).exists() is True
 
     def test_c_returns_badrequest_if_product_not_in_cart(self, client):
         response = client.post(
             reverse('shoppingcart:update-quantity'),
             json.dumps(
-                {'id_': 15, 'slug': 'hey-hey', 'quantity': 2}
+                {'id_': 15, 'quantity': 2}
             ),
             content_type='application/json'
         )
 
         assert response.status_code == 400
-        assert not Line.objects.filter(quantity=10)
 
 
 class TestPriceChangedView:
@@ -463,7 +391,7 @@ class TestPriceChangedView:
         response = view.form_valid('form')
 
         assert response.status_code == 200
-        assert cart.line_set.filter(price_changed=False).exists()
+        assert cart.line_set.filter(price_changed=False).exists() is True
 
     # Functional tests for view. Using Django Client.
 
@@ -480,7 +408,7 @@ class TestPriceChangedView:
         )
 
         assert response.status_code == 200
-        assert cart.line_set.filter(price_changed=False).exists()
+        assert cart.line_set.filter(price_changed=False).exists() is True
 
 
 class TestCartDetailView:
@@ -497,7 +425,7 @@ class TestCartDetailView:
         assert 'total' in context
         assert 'price_changed' in context
         assert context['total'] == 1000
-        assert not context['price_changed']
+        assert context['price_changed'] is False
 
     def test_get_object_return_existing_cart_for_user(self, u_request):
         cart = Cart.objects.create(owner=u_request.user)
@@ -540,7 +468,7 @@ class TestCartDetailView:
 
         assert response.status_code == 200
         assert response.context['total'] == 0
-        assert not response.context['price_changed']
+        assert response.context['price_changed'] is False
 
     def test_c_get_with_items_in_cart(self, client, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
@@ -554,7 +482,7 @@ class TestCartDetailView:
 
         assert response.status_code == 200
         assert response.context['total'] == 1000
-        assert not response.context['price_changed']
+        assert response.context['price_changed'] is False
 
     def test_c_get_with_price_changed_lines(self, client, product, admin_user):
         cart = Cart.objects.create(owner=admin_user)
@@ -567,7 +495,7 @@ class TestCartDetailView:
         )
         assert response.status_code == 200
         assert response.context['total'] == 1000
-        assert response.context['price_changed']
+        assert response.context['price_changed'] is True
 
     def test_c_get_with_cart_in_session(self, client):
         cart = Cart.objects.create()
@@ -581,4 +509,4 @@ class TestCartDetailView:
 
         assert response.status_code == 200
         assert response.context['total'] == 0
-        assert not response.context['price_changed']
+        assert response.context['price_changed'] is False
