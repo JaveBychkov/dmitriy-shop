@@ -9,6 +9,7 @@
 {% endblock styles %}
 {% block content %}
 {% include "shoppingcart/_cart_detail.html" %}
+<a href="{% if request.user.is_authenticated %}{% url "orders:place-order" %}{% else %}{% url "orders:check-email" %}{% endif %}">Place Order</a>
 {% endblock content %}
 
 {% block js_scripts %}
