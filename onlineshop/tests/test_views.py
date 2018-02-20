@@ -40,9 +40,7 @@ class TestCategoryDetailView:
             product_factory(category=category)
 
         request = rf.get('/')
-        view = CategoryDetailView()
-        view.request = request
-        view.object = category
+        view = CategoryDetailView(request=request, object=category)
 
         page = view.get_paginator()
         paginator = page.paginator
@@ -64,9 +62,7 @@ class TestCategoryDetailView:
         request.GET = request.GET.copy()
         request.GET['page'] = 2
 
-        view = CategoryDetailView()
-        view.request = request
-        view.object = category
+        view = CategoryDetailView(request=request, object=category)
 
         page = view.get_paginator()
         paginator = page.paginator

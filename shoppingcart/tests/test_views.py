@@ -54,21 +54,17 @@ def invalid_form(form_class):
 
 @pytest.fixture
 def base_cartview():
-    return BaseEditCartView()
+    return BaseEditCartView
 
 
 @pytest.fixture
 def valid_cartview(u_request, valid_form, base_cartview):
-    base_cartview.request = u_request
-    base_cartview.form_class = valid_form
-    return base_cartview
+    return base_cartview(request=u_request, form_class=valid_form)
 
 
 @pytest.fixture
 def invalid_cartview(u_request, invalid_form, base_cartview):
-    base_cartview.request = u_request
-    base_cartview.form_class = invalid_form
-    return base_cartview
+    return base_cartview(request=u_request, form_class=invalid_form)
 
 
 class TestGetAjaxDataMixin:
@@ -109,12 +105,12 @@ class TestBaseEditCartView:
 
     def test_render_to_response_returns_JsonResponse(self, base_cartview):
 
-        response = base_cartview.render_to_response(message='Test')
+        response = base_cartview().render_to_response(message='Test')
 
         assert response.status_code == 200
         assert json.loads(response.content) == {'message': 'Test'}
 
-        response = base_cartview.render_to_response(message='Test', status=400)
+        response = base_cartview().render_to_response(message='Test', status=400)
         assert response.status_code == 400
 
     def test_form_valid(self, valid_cartview):
@@ -430,15 +426,14 @@ class TestCartDetailView:
     def test_get_object_return_existing_cart_for_user(self, u_request):
         cart = Cart.objects.create(owner=u_request.user)
 
-        view = CartDetailView()
-        view.request = u_request
+        view = CartDetailView(request=u_request)
 
         assert cart == view.get_object()
 
     def test_creates_new_cart_for_user(self, u_request):
 
-        view = CartDetailView()
-        view.request = u_request
+        view = CartDetailView(request=u_request)
+
         cart = view.get_object()
 
         assert u_request.user.cart == cart
@@ -446,14 +441,12 @@ class TestCartDetailView:
     def test_get_cart_from_id_in_session(self, a_request):
         cart = Cart.objects.create()
         a_request.session['cart_id'] = cart.pk
-        view = CartDetailView()
-        view.request = a_request
+        view = CartDetailView(request=a_request)
 
         assert cart == view.get_object()
 
     def test_creates_new_cart_and_write_id_to_session(self, a_request):
-        view = CartDetailView()
-        view.request = a_request
+        view = CartDetailView(request=a_request)
 
         cart = view.get_object()
 
