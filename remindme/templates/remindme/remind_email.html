@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+    <p>{% blocktrans %}You've received this email because you have asked us to notify you when {{ product }} is available.{% endblocktrans %}</p>
+    <p>{% blocktrans %}It's awailable now, Take a look! <a href="{{ url }}"> {{ product }} </a></p> {% endblocktrans %}
+</body>
+</html>
