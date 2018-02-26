@@ -1,0 +1,45 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        table {
+            width: 500px;
+            }
+        td {
+            border-bottom: 1px dashed black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% blocktrans %}Greetings, {{ order.full_name }}{% endblocktrans %}
+    {% blocktrans %}You've placed an order at {{ site_name }} {% endblocktrans %}
+    <br />
+    {% trans "Your" %} {{ order }}
+    <table>
+        <tr>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Quantity" %}</th>
+            <th>{% trans "Price" %}</th>
+        </tr>
+        {% for product in order.products.all %}
+        <tr>
+            <td>{{ product.product.title }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.final_price }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>{% trans "Total:" %} {{ order.total }}</td>
+        </tr>
+    </table>
+
+    {% blocktrans %}Thank you for your order! Our manager will contact you shortly!{% endblocktrans %}
+</body>
+</html>

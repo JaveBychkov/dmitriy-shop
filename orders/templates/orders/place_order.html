@@ -1,0 +1,27 @@
+{% extends "profiles/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "orders/orders.css" %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="profile-wrap">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <p class="step">{% trans "Step 1." %}</p>
+    <form class="form" action="" method="POST">
+        {% csrf_token %}
+        {{ forms.user.as_p }}
+        {{ forms.address.as_p }}
+        <input class="update" type="submit" value="Continue">
+    </form>
+</div>
+{% endblock content %}

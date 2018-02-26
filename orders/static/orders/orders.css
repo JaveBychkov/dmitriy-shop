@@ -1,0 +1,30 @@
+.step {
+    font-size: 18px;
+    color: #F55549;
+    align-self: center;
+    margin-bottom: 5px;
+}
+
+.info {
+    color: rgb(119, 118, 118);
+}
+
+.order-info {
+    color: #F55549;
+    margin-bottom: 0px;
+}
+
+.order-info.products {
+    font-size: 18px;
+}
+
+.order-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.shopping-cart {
+    margin-top: 10px;
+}

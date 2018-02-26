@@ -1,0 +1,32 @@
+{% extends "onlineshop/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "orders/orders.css" %}">
+<link rel="stylesheet" href="{% static "shoppingcart/cart_styles.css" %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="order-wrap">
+    <p class="step">{% trans "Step 2." %}</p>
+    <p class="step">{% trans "Pleace check that everything is correct." %}</p>
+    <p class="order-info">{% trans "Delivery address" %}:</p> <p>{{ order.address }}</p>
+    <p class="order-info">{% trans "Full name of the recipient" %}:</p> <p>{{ order.full_name }}</p>
+    <p class="order-info">{% trans "Email" %}:</p> <p>{{ order.email }}</p>
+    <p class="order-info products">{% trans "Ordered products" %}:<p class="info">{% trans "Note: You can change quantity of products or delete them right here." %}</p></p>
+    <div class="shopping-cart">
+        {% include "shoppingcart/_cart_detail.html" with object=cart %}
+    </div>
+    <form action="" method="post"> {% csrf_token %}
+        <input type="submit" value="Confirm!">
+    </form>
+</div>
+
+{% endblock content %}
+
+{% block js_scripts %}
+{{ block.super }}
+<script src="{% static "shoppingcart/shoppingcart.js" %}"></script>
+{% endblock js_scripts %}
