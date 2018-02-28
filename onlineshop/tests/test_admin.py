@@ -5,6 +5,8 @@ from django.contrib.admin.sites import AdminSite
 
 from shoppingcart.signals import price_changed
 
+from remindme.signals import product_in_stock
+
 from onlineshop.admin import ProductAdmin
 from onlineshop.models import Product
 
@@ -85,24 +87,33 @@ def test_add_discount_action_intermediate_page(model_admin, products_qs, rf):
 @pytest.mark.django_db
 def test_signal_sends_after_product_save(model_admin, products_qs, rf):
     product = products_qs[0]
-    handler_called = False
+    price_changed_called = False
+    product_in_stock_called = False
 
     class Form:
         changed_data = ['price']
+        initial = {'stock': 0}
 
-    def handler(sender, product, **kwargs):
-        nonlocal handler_called
-        handler_called = True
+    def price_changed_handler(sender, product, **kwargs):
+        nonlocal price_changed_called
+        price_changed_called = True
 
-    price_changed.connect(handler)
+    def product_in_stock_handler(sender, product, request, **kwargs):
+        nonlocal product_in_stock_called
+        product_in_stock_called = True
+
+    price_changed.connect(price_changed_handler)
+    product_in_stock.connect(product_in_stock_handler)
 
     request = rf.post('/')
-
     model_admin.save_model(request, product, Form(), True)
 
-    assert handler_called
+    assert price_changed_called is True
+    assert product_in_stock_called is True
 
-    handler_called = False
+    price_changed_called = False
+    product_in_stock_called = False
     model_admin.save_model(request, product, Form(), False)
 
-    assert not handler_called
+    assert price_changed_called is False
+    assert product_in_stock_called is False

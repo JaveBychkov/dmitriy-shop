@@ -8,8 +8,13 @@
 <link rel="stylesheet" href="{% static "shoppingcart/cart_styles.css" %}">
 {% endblock styles %}
 {% block content %}
+<div class="shopping-cart-wrapper">
+{% if request.user.is_authenticated %}
+<a class="order-history" href="{% url 'order-history' %}">{% trans "Your order history" %}</a>
+{% endif %}
 {% include "shoppingcart/_cart_detail.html" %}
-<a href="{% if request.user.is_authenticated %}{% url "orders:place-order" %}{% else %}{% url "orders:check-email" %}{% endif %}">Place Order</a>
+<a class="place-order" href="{% url "orders:place-order" %}">Place Order</a>
+</div>
 {% endblock content %}
 
 {% block js_scripts %}

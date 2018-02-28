@@ -1,30 +1,27 @@
 from django.core.paginator import Paginator
-from django.utils.decorators import method_decorator
 from django.views import generic
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Category, Product, ProductAttributeValue
 
 
-class EnsureCsrfCookieMixin:
-    """
-    Ensures that the CSRF cookie will be passed to the client.
-    """
-
-    @method_decorator(ensure_csrf_cookie)
-    def dispatch(self, *args, **kwargs):
-        return super(EnsureCsrfCookieMixin, self).dispatch(*args, **kwargs)
-
-
-class OnlineShopHomePageView(EnsureCsrfCookieMixin, generic.ListView):
+class OnlineShopHomePageView(generic.ListView):
 
     model = Product
     template_name = 'onlineshop/index.html'
     context_object_name = 'products'
     paginate_by = 6
+    ordering = '-date_added'
+
+    def get_ordering(self):
+        """Get ordering for products."""
+        order = self.request.GET.get('order')
+        default = super().get_ordering()
+
+        ordering = {'new': '-date_added', 'discount': '-discount'}
+        return ordering.get(order, default)
 
 
-class CategoryDetailView(EnsureCsrfCookieMixin, generic.DetailView):
+class CategoryDetailView(generic.DetailView):
     model = Category
     paginate_by = 6
 
@@ -40,7 +37,7 @@ class CategoryDetailView(EnsureCsrfCookieMixin, generic.DetailView):
         return paginator.get_page(page)
 
 
-class ProductDetailView(EnsureCsrfCookieMixin, generic.DetailView):
+class ProductDetailView(generic.DetailView):
     model = Product
 
     def get_context_data(self, **kwargs):

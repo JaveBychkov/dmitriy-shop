@@ -4,10 +4,21 @@ from decimal import Decimal
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-
 from mptt.models import MPTTModel, TreeForeignKey
+
+
+def default_category():
+    return Category.objects.get_or_create(title='Unassigned')[0]
+
+
+def image_upload_path(instance, name):
+    ext = os.path.splitext(name)[1]
+    new_name = str(uuid.uuid4())
+    return '{}/{}/{}{}'.format(new_name[:2], new_name[2:4], new_name[4:], ext)
 
 
 class Category(MPTTModel):
@@ -18,7 +29,7 @@ class Category(MPTTModel):
                             blank=True,
                             null=True)
     title = models.CharField(_('Title'), max_length=64, unique=True)
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
 
     class Meta:
         verbose_name = _('Category')
@@ -38,16 +49,6 @@ class Category(MPTTModel):
         return self.title
 
 
-def default_category():
-    return Category.objects.get_or_create(title='Unassigned')[0]
-
-
-def image_upload_path(instance, name):
-    ext = os.path.splitext(name)[1]
-    new_name = str(uuid.uuid4())
-    return '{}/{}/{}{}'.format(new_name[:2], new_name[2:4], new_name[4:], ext)
-
-
 class Product(models.Model):
 
     category = models.ForeignKey(
@@ -59,7 +60,7 @@ class Product(models.Model):
     )
 
     title = models.CharField(_('Title'), max_length=64)
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
     price = models.DecimalField(_('Price'),
                                 max_digits=9, decimal_places=2,
                                 validators=(
@@ -71,7 +72,7 @@ class Product(models.Model):
                                    )
     desc = models.TextField(_('Description'),
                             null=True, blank=True)
-    date_added = models.DateField(_('Upload Date'), auto_now_add=True)
+    date_added = models.DateTimeField(_('Upload Date'), auto_now_add=True)
     stock = models.PositiveIntegerField(_('Stock'))
     image = models.ImageField(_('Image'),
                               upload_to=image_upload_path)
@@ -132,3 +133,21 @@ class ProductAttributeValue(models.Model):
     class Meta:
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Extra Product\'s Attributes')
+
+
+@receiver(pre_save, sender=Category)
+@receiver(pre_save, sender=Product)
+def unique_slug(sender, instance, **kwargs):
+    """If slug is not unique append digits."""
+    queryset = sender.objects.exclude(pk=instance.pk)
+    slug = instance.slug
+    new_slug = slug
+    idx = 0
+
+    while queryset.filter(slug=new_slug).exists():
+        # Consider raising error on some point in case of surprising
+        # infinite loop.
+        idx += 1
+        new_slug = '{slug}-{idx}'.format(slug=slug, idx=idx)
+
+    instance.slug = new_slug

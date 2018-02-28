@@ -111,6 +111,7 @@ and (max-width: 320px) {
 }
 
 .products {
+    margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -166,6 +167,11 @@ and (max-width: 320px) {
     transition: .3s ease-in;
 }
 
+.button:hover {
+    background: #F55549;
+    color: #FFFFFF;
+}
+
 .product-item:hover .button {
     background: #fc5a5a;
     color: #FFFFFF;
@@ -176,7 +182,7 @@ and (max-width: 320px) {
 }
 
 .pagination {
-    margin-top: 30px;
+    margin: 30px 0px;
     display: flex;
     justify-content: flex-end;
 }
@@ -219,4 +225,83 @@ and (max-width: 320px) {
 .page-button:hover {
     background: #F55549;
     color: #FFFFFF;
+}
+
+.success, .error, .warning {
+    border: 1px solid;
+    width: 600px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 3;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+
+.warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+
+.shopping-cart-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.place-order {
+    text-align: center;
+    text-decoration: none;
+    padding: 0 12px;
+    background: #cccccc;
+    color: #3F3F3F;
+    width: 100px;
+    font-size: 16px;
+    line-height: 28px;
+}
+
+.place-order:hover {
+    background: #F55549;
+    color: #FFFFFF;
+}
+
+.order-history {
+    align-self: center;
+    font-size: 18px;
+    color: #3F3F3F;
+}
+
+.order-history:hover {
+    color: #F55549;
+}
+
+.product-ordering {
+    text-align: center;
+    color: #3F3F3F;
+}
+
+.ordering {
+    margin: 0px 40px;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.active-ordering {
+    color: #F55549;
+}
+
+.ordering:visited {
+    color: #3F3F3F;
+}
+
+.active-ordering:visited {
+    color: #F55549;
 }

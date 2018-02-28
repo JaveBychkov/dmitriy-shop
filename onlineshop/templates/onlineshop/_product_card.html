@@ -15,7 +15,7 @@
             <a href="{% url "shoppingcart:add-product" %}" class="button" data-id_="{{ product.id }}" data-slug="{{ product.slug }}">{% trans "Add to cart" %}</a>
         {% else %}
                 <p>{% trans "not available" %}</p>
-                <a class="notifyme" href="">{% trans "Notify me when available!" %}</a>
+                <a class="notifyme" href="{% url "add-reminder" %}" data-product="{{ product.id }}">{% trans "Notify me when available!" %}</a>
         {% endif %}
     </div>
 </div>

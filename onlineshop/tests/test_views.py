@@ -1,11 +1,15 @@
+import datetime
+from unittest.mock import patch
+
 import pytest
+from django.utils import timezone
+from django.urls import reverse
 
-from onlineshop.views import (CategoryDetailView,
-                              ProductDetailView, OnlineShopHomePageView)
+from onlineshop.views import (CategoryDetailView, OnlineShopHomePageView,
+                              ProductDetailView)
 
-from .factories import (category_factory, product_factory, attribute_factory,
-                        product_attribute_value_factory)
-
+from .factories import (attribute_factory, category_factory,
+                        product_attribute_value_factory, product_factory)
 
 pytestmark = pytest.mark.django_db
 
@@ -97,3 +101,29 @@ def test_product_detail_view(rf, django_assert_num_queries):
     with django_assert_num_queries(1):
         assert attr.product == product
         assert attr.attribute == attribute
+
+
+def test_product_detail_view_ordering(client, settings):
+    product_factory(discount=10)
+
+    test_time = timezone.now() - datetime.timedelta(days=60)
+
+    with patch('django.utils.timezone.now') as date_mock:
+        date_mock.return_value = test_time
+        product_factory(discount=20)
+
+    url_discount = '{}?order=discount'.format(reverse('onlineshop:home'))
+    url_new = '{}?order=new'.format(reverse('onlineshop:home'))
+
+    response = client.get(url_discount)
+
+    assert response.status_code == 200
+    products = response.context['products']
+    assert products[0].discount > products[1].discount
+    assert products[0].discount == 20
+
+    response = client.get(url_new)
+    assert response.status_code == 200
+    products = response.context['products']
+    assert products[0].date_added > products[1].date_added
+    assert products[1].date_added == test_time

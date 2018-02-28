@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from django.template.response import TemplateResponse
-from django.contrib.admin import helpers
 
 from mptt.admin import MPTTModelAdmin, TreeRelatedFieldListFilter
 
 from shoppingcart.signals import price_changed
+from remindme.signals import product_in_stock
 
 from .models import Category, Product, Attribute, ProductAttributeValue
 from .forms import AddDiscountForm
@@ -33,9 +33,15 @@ class ProductAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if change:
             data = form.changed_data
+            initial = form.initial
 
             if any([x in data for x in ['price', 'discount']]):
                 price_changed.send(sender=self.__class__, product=obj)
+
+            if initial['stock'] == 0 and obj.stock > 0:
+                product_in_stock.send(
+                    sender=self.__class__, product=obj, request=request
+                )
 
     def add_discount(self, request, queryset):
         """Custom action that allow to add discount for products in bulk
@@ -52,7 +58,7 @@ class ProductAdmin(admin.ModelAdmin):
         """
         form = None
         message = _(
-            'Succesfully added {percent}% discount to {number} products'
+            'Succesfully added {percent}% \\discount to {number} products'
         )
 
         if 'apply' in request.POST:

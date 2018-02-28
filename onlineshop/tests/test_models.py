@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 from django.core.exceptions import ValidationError
 
-from onlineshop.models import image_upload_path
+from onlineshop.models import image_upload_path, unique_slug, Product
 
 from .factories import product_factory, category_factory, attribute_factory
 
@@ -14,6 +14,32 @@ def test_upload_image_path(uuid_mock):
     uuid_mock.uuid4.return_value = 'fddb8ee8-74ce-45db-bb4d-387bf8cc488d'
     expected_output = 'fd/db/8ee8-74ce-45db-bb4d-387bf8cc488d.jpg'
     assert expected_output == image_upload_path('instance', 'imageFile.jpg')
+
+
+@pytest.mark.django_db
+def test_unique_slug_handler():
+    # Create product with slug socks.
+    product_factory(slug='socks')
+    # Explicitly create instance of product with the same slug.
+    p = Product(slug='socks')
+    # And pass it to handler
+    unique_slug(Product, p)
+    assert p.slug == 'socks-1'
+
+    product = product_factory(slug='socks-1')
+    p = Product(slug='socks')
+    unique_slug(Product, p)
+    assert p.slug == 'socks-2'
+
+    p = Product(slug='unique-slug')
+    unique_slug(Product, p)
+    assert p.slug == 'unique-slug'
+
+    # Does not affect slugs on change.
+    product.title = 'New socks'
+    product.save()
+    product.refresh_from_db()
+    assert product.slug == 'socks-1'
 
 
 class TestProductModel:
@@ -47,6 +73,22 @@ class TestProductModel:
     def test_default_category(self):
         p = product_factory(add_category=False)
         assert p.category.title == 'Unassigned'
+
+    def test_image_url_property_returns_none(self):
+        p = product_factory(to_db=False)
+        assert p.image_url is None
+
+    def test_image_url_property_returns_image_url(self):
+        p = product_factory(to_db=False)
+
+        def image():
+            pass
+
+        image.url = 'someurl'
+
+        p.image = image.__get__(p)
+
+        assert p.image_url == 'someurl'
 
     def test_price_with_discount(self):
         p = product_factory(price=Decimal(3600.00), discount=10, to_db=False)

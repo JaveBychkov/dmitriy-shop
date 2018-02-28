@@ -1,7 +1,21 @@
 {% extends "onlineshop/base.html" %}
+{% load i18n %}
 
 {% block content %}
 <div class="products-list">
+    <div class="product-ordering">
+            {% with ordering=request.GET.order %}
+            <a class="ordering {% if ordering == "" or ordering == "new" %}active-ordering{% endif %}" href="?order=new">{% trans "Newest first" %}</a>
+            <a class="ordering {% if ordering == "discount" %}active-ordering{% endif %}" href="?order=discount">{% trans "Discounted first" %}</a>
+            {% endwith %}
+        </div>
+    {% if messages %}
+    <div class="messages" style="display: flex; justify-content: center;">
+        {% for message in messages %}
+            <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="products">
         {% for product in products %}
         {% include "onlineshop/_product_card.html" %}
