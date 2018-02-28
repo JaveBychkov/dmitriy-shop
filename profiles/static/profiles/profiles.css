@@ -13,6 +13,14 @@
 }
 
 input {
+    padding: 3px;
+    font-size: 90%;
+    width: 60%;
+    align-self: flex-end;
+    border: 1px solid #3F3F3F;
+}
+
+textarea {
     font-size: 90%;
     width: 60%;
     align-self: flex-end;
@@ -23,7 +31,7 @@ input:focus {
     border: 1px solid #F55549;
 }
 
-input:focus {
+textarea:focus {
     border: 1px solid #F55549;
 }
 
@@ -62,35 +70,16 @@ input:focus {
 .links {
     width: 300px;
     text-align: center;
-    color: #F55549;
 }
 
 .links a{
+    color: #F55549;
     text-decoration: underline;
     margin: 0 20px;
 }
 
 .links a:visited {
     color: #F55549;
-}
-
-.success, .error {
-    border: 1px solid;
-    width: 600px;
-    height: 50px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 3;
-}
-
-.error {
-    color: #D8000C;
-    background-color: #FFBABA;
-}
-
-.success {
-    color: #4F8A10;
-    background-color: #DFF2BF;
 }
 
 ul {

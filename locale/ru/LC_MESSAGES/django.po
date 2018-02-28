@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-09 16:42+0300\n"
+"POT-Creation-Date: 2018-02-28 13:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,12 +20,69 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: onlineshop/admin.py:55
-#, python-format, python-brace-format
-msgid "Succesfully added {percent}% discount to {number} products"
-msgstr "Успешно добавлена {percent}% dскидка для {number} продуктов"
+#: feedback/forms.py:10
+msgid "Your name"
+msgstr "Ваше имя"
 
-#: onlineshop/admin.py:79
+#: feedback/forms.py:11 orders/forms.py:12
+#: orders/templates/orders/check_order.html:17 profiles/forms.py:38
+#: remindme/models.py:10
+msgid "Email"
+msgstr "Адрес электронной почты"
+
+#: feedback/forms.py:12
+msgid "Your message"
+msgstr "Ваше сообщение"
+
+#: feedback/tasks.py:10
+#, python-brace-format
+msgid "Message from {name}. Email: {email}"
+msgstr "Сообщение от {name}. Email: {email}"
+
+#: feedback/templates/feedback/feedback.html:6 profiles/views.py:29
+msgid "Please correct the errors below."
+msgstr "Пожалуйста, исправьте ошибки ниже."
+
+#: feedback/templates/feedback/feedback.html:12
+msgid "Send"
+msgstr "Отправить"
+
+#: feedback/views.py:17
+msgid "Thank you for your feedback!"
+msgstr "Спасибо вам за ваш отзыв!"
+
+#: history/templates/history/history.html:20 onlineshop/models.py:31
+#: onlineshop/models.py:62
+#: orders/templates/orders/emails/email_for_user.html:25
+msgid "Title"
+msgstr "Название"
+
+#: history/templates/history/history.html:21
+#: orders/templates/orders/emails/email_for_user.html:26
+#: shoppingcart/models.py:190
+msgid "Quantity"
+msgstr "Количество"
+
+#: history/templates/history/history.html:22 onlineshop/models.py:64
+#: orders/templates/orders/emails/email_for_user.html:27
+msgid "Price"
+msgstr "Цена"
+
+#: history/templates/history/history.html:35
+msgid "Total"
+msgstr "Сумма"
+
+#: history/templates/history/history.html:39
+msgid "You don't have any orders"
+msgstr "У вас еще нет ниодного заказа"
+
+#: onlineshop/admin.py:61
+#, fuzzy, python-brace-format
+#| msgid "Succesfully added {percent}% discount to {number} products"
+msgid "Succesfully added {percent}% \\discount to {number} products"
+msgstr "Успешно добавлена {percent}% скидка для {number} продуктов"
+
+#: onlineshop/admin.py:85
 msgid "Add discount to products"
 msgstr "Добавить скидку для продуктов"
 
@@ -33,77 +90,70 @@ msgstr "Добавить скидку для продуктов"
 msgid "Online Shop"
 msgstr "Онлайн Магазин"
 
-#: onlineshop/models.py:16
+#: onlineshop/models.py:27
 msgid "Parent"
 msgstr "Родитель"
 
-#: onlineshop/models.py:20 onlineshop/models.py:61
-msgid "Title"
-msgstr "Название"
-
-#: onlineshop/models.py:24 onlineshop/models.py:56
+#: onlineshop/models.py:35 onlineshop/models.py:57
 msgid "Category"
 msgstr "Категория"
 
-#: onlineshop/models.py:25
+#: onlineshop/models.py:36
 msgid "Categories"
 msgstr "Категории"
 
-#: onlineshop/models.py:63
-msgid "Price"
-msgstr "Цена"
-
-#: onlineshop/models.py:68
+#: onlineshop/models.py:69
 msgid "Discount in %"
 msgstr "Скидка в %"
 
-#: onlineshop/models.py:72
+#: onlineshop/models.py:73
 msgid "Description"
 msgstr "Описание"
 
-#: onlineshop/models.py:74
+#: onlineshop/models.py:75
 msgid "Upload Date"
 msgstr "Дата добавления"
 
-#: onlineshop/models.py:75
+#: onlineshop/models.py:76
 msgid "Stock"
 msgstr "В наличии"
 
-#: onlineshop/models.py:76
+#: onlineshop/models.py:77
 msgid "Image"
 msgstr "Изображение"
 
-#: onlineshop/models.py:84
+#: onlineshop/models.py:85 shoppingcart/models.py:183
 msgid "Final Price"
 msgstr "Финальная Цена"
 
-#: onlineshop/models.py:87 onlineshop/models.py:125
+#: onlineshop/models.py:88 onlineshop/models.py:126 remindme/models.py:8
+#: shoppingcart/models.py:176
 msgid "Product"
 msgstr "Продукт"
 
-#: onlineshop/models.py:88
+#: onlineshop/models.py:89
 msgid "Products"
 msgstr "Продукты"
 
-#: onlineshop/models.py:99
+#: onlineshop/models.py:100
 #, fuzzy
 #| msgid "In stock:"
 msgid "In stock"
 msgstr "В наличии:"
 
-#: onlineshop/models.py:114 onlineshop/models.py:128 onlineshop/models.py:133
+#: onlineshop/models.py:115 onlineshop/models.py:129 onlineshop/models.py:134
 msgid "Product Attribute"
 msgstr "Характеристика Продукта"
 
-#: onlineshop/models.py:117
+#: onlineshop/models.py:118
 msgid "Attribute"
 msgstr "Характеристика"
 
-#: onlineshop/models.py:118
+#: onlineshop/models.py:119
 msgid "Attributes"
 msgstr "Характеристики"
 
-#: onlineshop/models.py:134
+#: onlineshop/models.py:135
 msgid "Extra Product's Attributes"
 msgstr "Дополнительная характеристика для продукта"
 
@@ -162,32 +212,36 @@ msgid "HOME"
 msgstr "ГЛАВНАЯ"
 
 #: onlineshop/templates/onlineshop/base.html:19
-msgid "DELIVERY"
-msgstr "ДОСТАВКА"
-
-#: onlineshop/templates/onlineshop/base.html:20
 msgid "CONTACT"
 msgstr "ОБРАТНАЯ СВЯЗЬ"
 
-#: onlineshop/templates/onlineshop/base.html:22
+#: onlineshop/templates/onlineshop/base.html:21
 msgid "MY PROFILE"
 msgstr "МОЙ ПРОФИЛЬ"
 
-#: onlineshop/templates/onlineshop/base.html:23
+#: onlineshop/templates/onlineshop/base.html:22
 msgid "LOGOUT"
 msgstr "ВЫХОД"
 
-#: onlineshop/templates/onlineshop/base.html:25
+#: onlineshop/templates/onlineshop/base.html:24
 msgid "LOGIN"
 msgstr "ВХОД"
 
-#: onlineshop/templates/onlineshop/base.html:27
+#: onlineshop/templates/onlineshop/base.html:26
 msgid "CART"
 msgstr "КОРЗИНА"
 
 #: onlineshop/templates/onlineshop/category_detail.html:10
 msgid "No products for this category"
 msgstr "Нет продуктов для этой категории"
+
+#: onlineshop/templates/onlineshop/index.html:8
+msgid "Newest first"
+msgstr "Сначала новые"
+
+#: onlineshop/templates/onlineshop/index.html:9
+msgid "Discounted first"
+msgstr "Сначала со скидкой"
 
 #: onlineshop/templates/onlineshop/product_detail.html:26
 msgid "In stock:"
@@ -205,21 +259,167 @@ msgstr "Нет :("
 msgid "Product is not available"
 msgstr "Продукта нет в наличии"
 
+#: onlineshop/templates/shoppingcart/cart_detail.html:13
+msgid "Your order history"
+msgstr "История ваших заказов"
+
+#: orders/forms.py:10
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: orders/forms.py:11
+msgid "First Name"
+msgstr "Имя"
+
+#: orders/models.py:15
+#, python-brace-format
+msgid "{country}, {city}, {street}, {postcode}, h.{house}, ap.{apartment}"
+msgstr "{country}, {city}, {street}, {postcode}, д.{house}, кв.{apartment}"
+
+#: orders/models.py:32
+msgid "In process"
+msgstr "Обрабатывается"
+
+#: orders/models.py:33
+msgid "Accepted"
+msgstr "Принят"
+
+#: orders/models.py:34
+msgid "Sent"
+msgstr "Отправлен"
+
+#: orders/models.py:35
+msgid "Closed"
+msgstr "Закрыт"
+
+#: orders/models.py:40 profiles/models.py:14
+msgid "User"
+msgstr "Пользователь"
+
+#: orders/models.py:42
+msgid "Customer Email"
+msgstr "Электронная почта покупателя"
+
+#: orders/models.py:44
+msgid "Customer Full Name"
+msgstr "Полное имя покупателя"
+
+#: orders/models.py:45
+msgid "Address"
+msgstr "Адрес"
+
+#: orders/models.py:46
+msgid "Date of creation"
+msgstr "Дата создания заказа"
+
+#: orders/models.py:47
+msgid "Status"
+msgstr "Состояние заказа"
+
+#: orders/models.py:49
+msgid "Total price for an order"
+msgstr "Полная стоимость покупки"
+
+#: orders/models.py:61
+msgid "Order# {}"
+msgstr "Заказ# {}"
+
+#: orders/templates/orders/check_order.html:13
+msgid "Step 2."
+msgstr "Шаг 2."
+
+#: orders/templates/orders/check_order.html:14
+msgid "Pleace check that everything is correct."
+msgstr "Пожалуйста, проверьте, что информация корректна."
+
+#: orders/templates/orders/check_order.html:15
+msgid "Delivery address"
+msgstr "Адрес доставки"
+
+#: orders/templates/orders/check_order.html:16
+#, fuzzy
+#| msgid "Full name of the recipent"
+msgid "Full name of the recipient"
+msgstr "Полное имя получателя"
+
+#: orders/templates/orders/check_order.html:18
+msgid "I wan't to change information"
+msgstr "Я хочу изменить некоторую информацию"
+
+#: orders/templates/orders/check_order.html:19
+msgid "Ordered products"
+msgstr "Заказанные товары"
+
+#: orders/templates/orders/check_order.html:19
+msgid "Note: You can change quantity of products or delete them right here."
+msgstr ""
+"Вы можете изменить кол-во товаров или удалить их из корзины не покидая "
+"страницу"
+
+#: orders/templates/orders/check_order.html:24
+msgid "Confirm!"
+msgstr "Подтвердить"
+
+#: orders/templates/orders/emails/email_for_manager.html:10
+msgid "The user has just placed an order:"
+msgstr "Пользователь только что разместил заказ:"
+
+#: orders/templates/orders/emails/email_for_user.html:19
+#, python-format
+msgid "Greetings, %(order.full_name)s"
+msgstr "Приветствуем, %(order.full_name)s"
+
+#: orders/templates/orders/emails/email_for_user.html:20
+#, python-format
+msgid "You've placed an order at %(site_name)s "
+msgstr "Вы разместили заказ на сайте %(site_name)s "
+
+#: orders/templates/orders/emails/email_for_user.html:22
+msgid "Your"
+msgstr "Ваш"
+
+#: orders/templates/orders/emails/email_for_user.html:39
+#: shoppingcart/templates/shoppingcart/_cart_detail.html:25
+msgid "Total:"
+msgstr "Сумма:"
+
+#: orders/templates/orders/emails/email_for_user.html:43
+msgid "Thank you for your order! Our manager will contact you shortly!"
+msgstr "Спасибо за ваш заказ! Наш менеджер скоро свяжется с вами!"
+
+#: orders/templates/orders/place_order.html:19
+msgid "Step 1."
+msgstr "Шаг 1."
+
+#: orders/views.py:26
+msgid "You can't place orders with empty cart"
+msgstr "Вы не можете размещать заказы с пустой корзиной"
+
+#: orders/views.py:88
+msgid "Please fill out form to continue"
+msgstr "Пожалуйста, заполните форму для продолжения"
+
+#: orders/views.py:106
+#, fuzzy
+#| msgid "Your order was successfully placed. Information sent to email."
+msgid "Your order now proccessing! Information will be sent to email."
+msgstr "Ваш заказ принят! Информация о нем отправлена вам на email."
+
+#: orders/views.py:124
+msgid "Order placed on 3DShop"
+msgstr "Размещен заказ на сайте 3DShop"
+
 #: profiles/apps.py:7
 msgid "Profiles"
 msgstr "Профили"
 
-#: profiles/forms.py:26
-msgid "Email"
-msgstr ""
+#: profiles/forms.py:22 profiles/forms.py:49
+msgid "User with given email already exists"
+msgstr "Пользователь с таким email уже существует"
 
 #: profiles/models.py:10
 msgid "The postal code must consist of 6 digits"
 msgstr "Почтовый индекс должен состоять из 6 цифр"
-
-#: profiles/models.py:14
-msgid "User"
-msgstr "Пользователь"
 
 #: profiles/models.py:16
 msgid "Country"
@@ -339,13 +539,112 @@ msgstr "Обновить"
 msgid "Sign Up"
 msgstr "Зарегистрироваться"
 
-#: profiles/views.py:26
+#: profiles/views.py:25
 msgid "Your profile was successfully updated!"
 msgstr "Ваш профиль успешно обновлен!"
 
-#: profiles/views.py:30
-msgid "Please correct the errors below."
-msgstr "Пожалуйста, исправьте ошибки ниже."
+#: remindme/tasks.py:12
+msgid "{} have gone on sale!"
+msgstr "{} выставлен на продажу!"
+
+#: remindme/templates/remindme/remind_email.html:11
+#, fuzzy, python-format
+#| msgid ""
+#| "You're receiving this email because you requested a password reset for "
+#| "your user account at %(site_name)s."
+msgid ""
+"You've received this email because you have asked us to notify you when "
+"%(product)s is available."
+msgstr ""
+"Вы получили это письмо потому кто-то запросил восстановление пароля для "
+"вашей учетной записи на сайте %(site_name)s."
+
+#: remindme/templates/remindme/remind_email.html:12
+#, python-format
+msgid ""
+"It's awailable now, Take a look! <a href=\"%(url)s\"> %(product)s </a></p> "
+msgstr ""
+"Товар сейчас в продаже! Посмотрите: <a href=\"%(url)s\"> %(product)s </a></"
+"p> "
+
+#: remindme/views.py:16
+msgid "We will notify you as soon as product will go on sale"
+msgstr "Мы уведомим вас сразу после того как товар поступит в продажу"
+
+#: remindme/views.py:17
+msgid "Something went wrong, try again later"
+msgstr "Что-то пошло не так, попробуйте позже"
+
+#: shoppingcart/forms.py:35
+msgid "Invalid data"
+msgstr "Неверные данные"
+
+#: shoppingcart/forms.py:47
+#, fuzzy
+#| msgid "Product is not available"
+msgid "Product not in cart"
+msgstr "Продукта нет в наличии"
+
+#: shoppingcart/models.py:84
+msgid "Owner"
+msgstr "Владелец"
+
+#: shoppingcart/models.py:167 shoppingcart/models.py:179
+msgid "Cart"
+msgstr "Корзина"
+
+#: shoppingcart/models.py:168
+msgid "Carts"
+msgstr "Корзины"
+
+#: shoppingcart/models.py:188
+msgid "Did the price changed?"
+msgstr "Изменилась ли цена на товар?"
+
+#: shoppingcart/templates/shoppingcart/_cart_detail.html:7
+msgid "One or more products in your shopping cart has changed in price"
+msgstr "У одного или более продуктов в вашей корзине изменилась цена"
+
+#: shoppingcart/templates/shoppingcart/_cart_detail.html:8
+msgid "Ok, got it!"
+msgstr "Спасибо, я понял!"
+
+#: shoppingcart/templates/shoppingcart/_cart_detail.html:23
+msgid "There is no items in your cart!"
+msgstr "В вашей корзине нет товаров!"
+
+#: shoppingcart/views.py:50
+msgid "Ok"
+msgstr ""
+
+#: shoppingcart/views.py:104
+msgid "Product already in your cart"
+msgstr "Товар уже находится в вашей корзине"
+
+#: shoppingcart/views.py:126 shoppingcart/views.py:186
+msgid "Product not in stock"
+msgstr "Товара нет в наличии"
+
+#: shoppingcart/views.py:132
+msgid "Product successfuly added to cart!"
+msgstr "Товар успешно добавлен в корзину!"
+
+#: shoppingcart/views.py:158
+msgid "Successfully removed"
+msgstr "Товар удален из вашей корзины"
+
+#: shoppingcart/views.py:191
+msgid "ok"
+msgstr ""
+
+#~ msgid "DELIVERY"
+#~ msgstr "ДОСТАВКА"
 
 #~ msgid "ABOUT US"
 #~ msgstr "О НАС"
+
+msgid "Order"
+msgstr "Заказ"
+
+msgid "Orders"
+msgstr "Заказы"
