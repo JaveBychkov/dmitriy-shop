@@ -1,4 +1,4 @@
-from .base import *
+from .base import *  # NOQA
 
 
 DEBUG = True
@@ -15,6 +15,10 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'onlineshop.apps.OnlineshopConfig',
     'shoppingcart.apps.ShoppingcartConfig',
+    'orders.apps.OrdersConfig',
+    'remindme.apps.RemindMeConfig',
+    'history.apps.HistoryConfig',
+    'feedback.apps.FeedbackConfig',
 ]
 
 MIDDLEWARE = [
@@ -28,3 +32,5 @@ MIDDLEWARE = [
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CELERY_TASK_ALWAYS_EAGER = True

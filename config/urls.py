@@ -20,8 +20,17 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+from remindme.views import add_reminder
+from history.views import history_view
+from feedback.views import feedback_view
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('remindme/', add_reminder, name='add-reminder'),
+    path('feedback/', feedback_view, name='feedback'),
+    path('orders/history/', history_view, name='order-history'),
+    path('orders/', include('orders.urls')),
     path('cart/', include('shoppingcart.urls')),
     path('profile/', include('profiles.urls')),
     path('', include('onlineshop.urls')),

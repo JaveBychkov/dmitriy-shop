@@ -1,0 +1,15 @@
+{% extends "profiles/base.html" %}
+{% load i18n %}
+
+{% block content %}
+{% if form.errors %}
+    <p class="error">{% trans "Please correct the errors below." %}</p>
+{% endif %}
+<div class="profile-wrap">
+    <form class="form" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="update" type="submit">{% trans "Send" %}</button>
+    </form>
+</div>
+{% endblock %}

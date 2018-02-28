@@ -1,0 +1,88 @@
+.history-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 50px;
+}
+
+.order {
+    border: 1px solid #E0E0E0;
+    margin-bottom: 15px;
+    padding: 20px;
+}
+
+.order-legend {
+    color: #3F3F3F;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.legend-price {
+    align-self: flex-end;
+}
+
+.legend-image {
+    width: 200px;
+}
+
+.legend-title {
+    width: 200px;
+    font-size: 18px;
+}
+
+.p-title {
+    width: 300px;
+    font-size: 18px;
+}
+
+.order-header {
+    border-bottom: 1px dashed #F55549;
+    justify-content: space-between;
+    color: #3F3F3F;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.order-date {
+    width: 33%;
+}
+
+.order-status {
+    width: 33%;
+    text-align: end;
+}
+
+.order-title {
+    width: 33%;
+}
+
+.order-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.order-total {
+    align-self: flex-end;
+    color: #3F3F3F;
+}
+
+.order-total-money {
+    color: #F55549;
+}
+
+.history-link {
+    display: block;
+    color: #F55549;
+}
+
+.line {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

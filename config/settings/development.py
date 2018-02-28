@@ -1,4 +1,4 @@
-from .base import *
+from .base import *  # NOQA
 
 
 DEBUG = True
@@ -16,6 +16,10 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'onlineshop.apps.OnlineshopConfig',
     'shoppingcart.apps.ShoppingcartConfig',
+    'orders.apps.OrdersConfig',
+    'remindme.apps.RemindMeConfig',
+    'history.apps.HistoryConfig',
+    'feedback.apps.FeedbackConfig',
 ]
 
 MIDDLEWARE = [
