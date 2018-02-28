@@ -1,17 +1,14 @@
 import json
 
 import pytest
-from django.contrib.auth.models import AnonymousUser
+from django.http import Http404
 from django.urls import reverse
 
-from onlineshop.tests.factories import product_factory
-
 from shoppingcart.models import Cart, Line
-from shoppingcart.views import (AddProductView, BaseEditCartView,
-                                CartDetailView, ChangeQuantityView,
-                                GetJsonDataMixin, RemoveProductView,
-                                PriceChangedView)
-
+from shoppingcart.views import (AddProductView, AjaxPOSTorNotFoundMixin,
+                                BaseEditCartView, CartDetailView,
+                                ChangeQuantityView, GetJsonDataMixin,
+                                PriceChangedView, RemoveProductView)
 
 pytestmark = pytest.mark.django_db
 
@@ -93,6 +90,38 @@ class TestGetAjaxDataMixin:
         data = view.get_form()
 
         assert data == {'id_': '2'}
+
+
+class TestAjaxPOSTorNotFoundMixin:
+
+    class AnotherDummyView:
+        def dispatch(self, request, *args, **kwargs):
+            self.super_called = True
+
+    class DummyView(AjaxPOSTorNotFoundMixin, AnotherDummyView):
+        super_called = False
+
+    def test_ajax_request(self, rf):
+        view = self.DummyView()
+
+        request = rf.post(
+            '/', {},
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+
+        view.dispatch(request)
+
+        assert view.super_called is True
+
+    def test_non_ajax_raises_404(self, rf):
+        view = self.DummyView()
+        request = rf.post(
+            '/', {},
+            content_type='application/json',
+        )
+        with pytest.raises(Http404):
+            view.dispatch(request)
 
 
 class TestBaseEditCartView:
@@ -210,7 +239,8 @@ class TestAddProductView:
         response = client.post(
             reverse('shoppingcart:add-product'),
             json.dumps({'id_': product.pk}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 200
@@ -227,7 +257,8 @@ class TestAddProductView:
         response = client.post(
             reverse('shoppingcart:add-product'),
             json.dumps({'id_': product.pk}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 400
@@ -246,7 +277,8 @@ class TestAddProductView:
         response = client.post(
             reverse('shoppingcart:add-product'),
             json.dumps({'id_': product.pk}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 400
@@ -256,7 +288,8 @@ class TestAddProductView:
         response = client.post(
             reverse('shoppingcart:add-product'),
             json.dumps({'id_': 18}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 400
@@ -290,7 +323,8 @@ class TestRemoveProductView:
         response = client.post(
             reverse('shoppingcart:remove-product'),
             json.dumps({'id_': product.pk}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 200
@@ -300,7 +334,8 @@ class TestRemoveProductView:
         response = client.post(
             reverse('shoppingcart:remove-product'),
             json.dumps({'id_': 23}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 400
@@ -357,7 +392,8 @@ class TestChangeQuantityView:
             json.dumps(
                 {'id_': product.pk, 'quantity': 2}
             ),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 200
@@ -369,7 +405,8 @@ class TestChangeQuantityView:
             json.dumps(
                 {'id_': 15, 'quantity': 2}
             ),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 400
@@ -400,7 +437,8 @@ class TestPriceChangedView:
         response = client.post(
             reverse('shoppingcart:price-changed'),
             json.dumps({'confirm': True}),
-            content_type='application/json'
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
 
         assert response.status_code == 200
@@ -456,7 +494,7 @@ class TestCartDetailView:
 
     def test_c_get_with_empty_cart(self, client):
         response = client.get(
-            reverse('shoppingcart:cart-detail')
+            reverse('shoppingcart:cart-detail'),
         )
 
         assert response.status_code == 200
@@ -470,7 +508,7 @@ class TestCartDetailView:
         client.force_login(admin_user)
 
         response = client.get(
-            reverse('shoppingcart:cart-detail')
+            reverse('shoppingcart:cart-detail'),
         )
 
         assert response.status_code == 200

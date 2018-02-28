@@ -10,7 +10,8 @@ from onlineshop.tests.factories import product_factory
 def session_request(rf):
     """Don't actually session, just interface that some methods needs"""
     request = rf.post(
-        '/', json.dumps({'id_': '2'}), content_type='application/json'
+        '/', json.dumps({'id_': '2'}), content_type='application/json',
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest'
     )
     request.session = {}
     return request

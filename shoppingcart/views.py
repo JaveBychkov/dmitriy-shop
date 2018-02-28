@@ -1,17 +1,19 @@
 import json
 
-from django.apps import apps
-from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
-from django.db.models import Prefetch
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.utils.translation import ugettext as _
 from django.views import View, generic
 
-from onlineshop.models import Product
-
 from .forms import PriceChangedForm, ProductForm, ProductQuantityForm
-from .models import Cart, Line
+from .models import Cart
+
+
+class AjaxPOSTorNotFoundMixin:
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return super().dispatch(request, *args, **kwargs)
+        raise Http404('Hmmmm...')
 
 
 class GetJsonDataMixin:
@@ -28,7 +30,7 @@ class GetJsonDataMixin:
         return {'data': data}
 
 
-class BaseEditCartView(GetJsonDataMixin, View):
+class BaseEditCartView(AjaxPOSTorNotFoundMixin, GetJsonDataMixin, View):
     """
     Base view that define default methods for all views that edit cart.
     """
