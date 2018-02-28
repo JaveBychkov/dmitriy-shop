@@ -28,3 +28,12 @@
 .shopping-cart {
     margin-top: 10px;
 }
+
+.change-shipping {
+    color: #3F3F3F;
+    font-size: 16px;
+}
+
+.change-shipping:hover{
+    color: #F55549;
+}

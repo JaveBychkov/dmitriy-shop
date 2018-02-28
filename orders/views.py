@@ -1,12 +1,7 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
-from django.core import mail
-from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect
-from django.template import loader
 from django.urls import reverse
-from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -19,6 +14,9 @@ from .tasks import send_order_placed_email
 
 
 class NotEmptyCartRequiredMixin:
+    """
+    Mixin that ensures that user placing order have something in cart.
+    """
 
     def dispatch(self, request, *args, **kwargs):
         user_and_session = request.user, request.session
@@ -47,9 +45,18 @@ class PlaceOrderView(NotEmptyCartRequiredMixin, generic.TemplateView):
                 'address': AddressForm(instance=address)
             }
         else:
+            # Handle situation when not authenticated user changed his mind on
+            # CheckOrder step and wants to change some information, to not
+            # fill the form again - we use already written in session data
+            # as initial.
+            initial = {'user': None, 'address': None}
+            form_in_session = self.request.session.get('form')
+
+            if form_in_session is not None:
+                initial.update(form_in_session)
             forms = {
-                'user': UserForm(),
-                'address': AddressForm()
+                'user': UserForm(initial=initial['user']),
+                'address': AddressForm(initial=initial['address'])
             }
         return self.render_to_response(self.get_context_data(forms=forms))
 
@@ -61,7 +68,9 @@ class PlaceOrderView(NotEmptyCartRequiredMixin, generic.TemplateView):
         if all([x.is_valid() for x in forms.values()]):
             form_data = {'user': forms['user'].cleaned_data,
                          'address': forms['address'].cleaned_data}
+
             self.request.session['form'] = form_data
+
             return redirect('orders:check-order')
         return self.render_to_response(self.get_context_data(forms=forms))
 

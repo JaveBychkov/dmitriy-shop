@@ -53,6 +53,10 @@ class Order(models.Model):
                                 ), null=True, blank=True)
     objects = OrderManager()
 
+    class Meta:
+        verbose_name = _('Order')
+        verbose_name_plural = _('Orders')
+
     def __str__(self):
         return ugettext('Order# {}').format(self.pk)
 
