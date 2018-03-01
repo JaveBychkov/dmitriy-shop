@@ -2,7 +2,7 @@ import dj_database_url
 import os
 
 from ..base import *  # NOQA
-from ..base import get_env_variable, BASE_DIR
+from ..base import get_env_variable
 
 DEBUG = False
 
@@ -18,6 +18,10 @@ DATABASES = {
         'NAME': 'somethingsomething.db',
     }
 }
+
+LOCALE_PATHS = (
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale'),
+)
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
