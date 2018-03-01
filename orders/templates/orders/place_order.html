@@ -21,7 +21,7 @@
         {% csrf_token %}
         {{ forms.user.as_p }}
         {{ forms.address.as_p }}
-        <input class="update" type="submit" value="Continue">
+        <input class="update" type="submit" value="{% trans "Continue" %}">
     </form>
 </div>
 {% endblock content %}

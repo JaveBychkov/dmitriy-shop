@@ -648,3 +648,9 @@ msgstr "Заказ"
 
 msgid "Orders"
 msgstr "Заказы"
+
+msgid "Place Order"
+msgstr "Разместить заказ"
+
+msgid "Continue"
+msgstr "Продолжить"

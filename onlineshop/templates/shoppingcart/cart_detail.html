@@ -13,7 +13,7 @@
 <a class="order-history" href="{% url 'order-history' %}">{% trans "Your order history" %}</a>
 {% endif %}
 {% include "shoppingcart/_cart_detail.html" %}
-<a class="place-order" href="{% url "orders:place-order" %}">Place Order</a>
+<a class="place-order" href="{% url "orders:place-order" %}">{% trans "Place Order" %}</a>
 </div>
 {% endblock content %}
 
