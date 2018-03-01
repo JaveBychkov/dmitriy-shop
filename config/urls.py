@@ -34,7 +34,7 @@ urlpatterns = [
     path('cart/', include('shoppingcart.urls')),
     path('profile/', include('profiles.urls')),
     path('', include('onlineshop.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
 
 if settings.DEBUG:
@@ -42,3 +42,4 @@ if settings.DEBUG:
     urlpatterns = [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
+    urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

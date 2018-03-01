@@ -1,0 +1,2 @@
+# heroku said you must have requirements.txt in your root repository
+-r requirements/heroku.txt
