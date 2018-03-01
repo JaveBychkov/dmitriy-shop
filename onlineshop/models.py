@@ -29,7 +29,7 @@ class Category(MPTTModel):
                             blank=True,
                             null=True)
     title = models.CharField(_('Title'), max_length=64, unique=True)
-    slug = models.SlugField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50)
 
     class Meta:
         verbose_name = _('Category')
@@ -60,7 +60,7 @@ class Product(models.Model):
     )
 
     title = models.CharField(_('Title'), max_length=64)
-    slug = models.SlugField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50)
     price = models.DecimalField(_('Price'),
                                 max_digits=9, decimal_places=2,
                                 validators=(
