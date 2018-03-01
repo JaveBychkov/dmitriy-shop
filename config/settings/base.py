@@ -41,13 +41,6 @@ LOGIN_URL = 'profiles:login'
 LOGIN_REDIRECT_URL = 'onlineshop:home'
 LOGOUT_REDIRECT_URL = 'onlineshop:home'
 
-# REDIS related settings
-CELERY_REDIS_HOST = 'localhost'
-CELERY_REDIS_PORT = '6379'
-CELERY_BROKER_URL = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT + '/0'
-CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT + '/0'
-
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

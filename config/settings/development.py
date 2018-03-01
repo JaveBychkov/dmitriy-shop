@@ -52,6 +52,12 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = ['127.0.0.1']
 
+CELERY_REDIS_HOST = 'localhost'
+CELERY_REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT + '/0'
+CELERY_RESULT_BACKEND = 'redis://' + CELERY_REDIS_HOST + ':' + CELERY_REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 

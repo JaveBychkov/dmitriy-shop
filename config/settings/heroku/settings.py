@@ -70,6 +70,8 @@ STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
 DEFAULT_FILE_STORAGE = 'config.settings.heroku.storage_backends.MediaStorage'
 
+CELERY_BROKER_URL = get_env_variable('REDIS_URL')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
